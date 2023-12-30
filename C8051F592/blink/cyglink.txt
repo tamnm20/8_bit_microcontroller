@@ -1,0 +1,1 @@
+"C:\Users\TAMRD\Documents\Documents\C8051F592\blink\main.obj"  TO "C:\Users\TAMRD\Documents\Documents\C8051F592\blink\blink" RS(256) PL(68) PW(78) 

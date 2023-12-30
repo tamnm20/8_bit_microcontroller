@@ -1,0 +1,12 @@
+"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\F50x_Target_App_InfoBlock.obj",
+"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\main.obj",
+"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\Startup_WatchdogDisable.obj",
+"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\drv_mcu.obj",
+BANK1{"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\mgr_mcu.obj"},
+BANK1{"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\drv_timer.obj"},
+BANK1{"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\mgr_comm.obj"},
+"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\drv_can.obj",
+BANK1{"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\drv_spi.obj"},
+"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\L51_BANK.obj",
+BANK1{"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\mgr_diag.obj"},
+BANK1{"D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\drv_mem.obj"}  TO "D:\micom_diag\UPDATE_MODULE\trunk\FIRMWARE\Application_CAN_SAS_Tx_Module_Tu\SteeringCamera_App.omf" NOOL CODE(0x4000-0x7EFF) BANK0(?CO?F50x_Target_App_InfoBlock(0x7FF0)) BANKAREA(8000H,0FFFFH) 
