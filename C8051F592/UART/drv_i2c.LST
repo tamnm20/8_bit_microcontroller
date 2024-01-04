@@ -1,0 +1,528 @@
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE DRV_I2C
+OBJECT MODULE PLACED IN drv_i2c.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.exe drv_i2c.c DB OE BR INTVECTOR(0X4000) INCDIR(c:\SiLabs\MCU\Inc)
+
+line level    source
+
+   1          #include "compiler_defs.h"
+   2          #include "C8051F580_defs.h"            // SFR declarations
+   3          #include "drv_i2c.h"
+   4          #include "drv_timer.h"
+   5          #include "mgr_diag.h"
+*** WARNING C318 IN LINE 5 OF drv_i2c.c: can't open file 'mgr_diag.h'
+   6          #include "global_define.h"
+   7          
+   8          static SEG_XDATA volatile U8   number_wd = 0U;   
+   9          static SEG_XDATA volatile U8   number_rd = 0U;
+  10          
+  11          static SEG_XDATA volatile U8 SMB_DATA_IN[4] = {0x00U,0x00U,0x00U,0x00U};
+  12          static SEG_XDATA volatile U8 SMB_DATA_OUT[4] = {0x00U,0x00U,0x00U,0x00U};
+  13          
+  14          static SEG_XDATA volatile U8 TARGET = 0x00U;  // Target SMBus slave address
+  15          static SEG_XDATA volatile U8 SMB_BUSY = 0U;    // Software flag to indicate when the
+  16                                                 // SMB_Read() or SMB_Write() functions
+  17                                                 // have claimed the SMBus
+  18          static SEG_XDATA volatile U8 SMB_RW = 0x00U;  // Software flag to indicate the
+  19                                                 // direction of the current transfer
+  20          static SEG_XDATA volatile U8 NUM_ERRORS = 0U;  // Counter for the number of errors.
+  21          
+  22          SEG_XDATA volatile U8 g_I2C_Err_Cnt = 0x00U;  // Counter for the number of errors.
+  23          
+  24          //-----------------------------------------------------------------------------
+  25          // Function PROTOTYPES
+  26          //-----------------------------------------------------------------------------
+  27          #ifndef __PST_PolySpace__
+  28          INTERRUPT_PROTO (TIMER3_ISR, INTERRUPT_TIMER3);
+  29          INTERRUPT_PROTO (SMBUS0_ISR, INTERRUPT_SMBUS0);
+  30          #else
+              void TIMER3_ISR(void);
+              void SMBUS0_ISR(void);
+              #endif
+  34          
+  35          void SMB_Write (void);
+  36          void SMB_Read (void);
+  37          
+  38          void SMBUS0_Init (void)
+  39          {
+  40   1         SEG_XDATA U8 i = 0U;
+  41   1      
+  42   1         SEG_XDATA U8 SFRPAGE_save = SFRPAGE;
+  43   1         SFRPAGE = ACTIVE_PAGE;
+  44   1      
+  45   1         SMB0CF = (U8)0x5D;                     // Use Timer1 overflows as SMBus clock
+  46   1                                             // source;
+  47   1                                             // Disable slave mode;
+  48   1                                             // Enable setup & hold time
+  49   1                                             // extensions;
+  50   1                                             // Enable SMBus Free timeout detect;
+  51   1                                             // Enable SCL low timeout detect;
+  52   1      
+  53   1         SMB0CF |= (U8)0x80;                    // Enable SMBus;
+  54   1              
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 2   
+
+  55   1         EIE1 |= (U8)0x01;                     // Enable the SMBus interrupt
+  56   1      
+  57   1         SFRPAGE = SFRPAGE_save;
+  58   1      
+  59   1      
+  60   1      /*------Global Value Init------*/
+  61   1      
+  62   1              for (i = 0; i < 4U; i++)
+  63   1              {
+  64   2                      SMB_DATA_IN[i] = 0x00U;
+  65   2                      SMB_DATA_OUT[i] = 0x00U;
+  66   2              }
+  67   1              number_wd       = 0x00U;   
+  68   1              number_rd       = 0x00U;
+  69   1              
+  70   1              TARGET          = 0x00U;
+  71   1              SMB_BUSY        = 0x00U;
+  72   1              SMB_RW          = 0x00U;
+  73   1              NUM_ERRORS      = 0x00U;
+  74   1      
+  75   1      }
+  76          
+  77          U16 i2c_master_read(U8 slave_addr, U16 addr, U8 Byte_Length)
+  78          {
+  79   1              SEG_XDATA U16 dat = (U16)0x00U;
+  80   1              SEG_XDATA U8 i = 0U;
+  81   1      
+  82   1              number_wd = 1;   
+  83   1              number_rd = 1;
+  84   1      
+  85   1              NUM_ERRORS = 0;                         // Error counter
+  86   1      
+  87   1              //SMB_DATA_OUT[0] = (U8)((addr>>8)&0x00FFU);
+  88   1              if ( Byte_Length == I2C_2BYTE_RW )
+  89   1              {
+  90   2                      number_wd = 2;   
+  91   2                      number_rd = 2;
+  92   2                      SMB_DATA_OUT[0] = (U8)((addr>>8U)&0x00FFU);
+  93   2                      SMB_DATA_OUT[1] = (U8)(addr & 0x00FFU);
+  94   2              }
+  95   1              else
+  96   1              {
+  97   2                      number_wd = 1;   
+  98   2                      number_rd = 1;
+  99   2                      SMB_DATA_OUT[0] = (U8)(addr & 0x00FFU);
+ 100   2              }
+ 101   1      
+ 102   1      
+ 103   1              TARGET = slave_addr;                    // Target the Slave for next SMBus transfer
+ 104   1              SMB_Write();                                    // Initiate SMBus write
+ 105   1      
+ 106   1              // SMBus Read Sequence
+ 107   1              TARGET = slave_addr;                    // Target the Slave for next SMBus transfer
+ 108   1              SMB_Read();                                                             // Initiate SMBus read
+ 109   1      
+ 110   1              dat = (U16)SMB_DATA_IN[0];
+ 111   1              if ( Byte_Length == I2C_2BYTE_RW )
+ 112   1              {
+ 113   2                      dat = (dat<<8U) | (U16)SMB_DATA_IN[1];
+ 114   2              }
+ 115   1      
+ 116   1              for (i = 0; i < 4U; i++)
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 3   
+
+ 117   1              {
+ 118   2                      SMB_DATA_IN[i] = 0x00U;
+ 119   2              }
+ 120   1      
+ 121   1              if( NUM_ERRORS > 0U ){
+ 122   2                      NUM_ERRORS = 0U;
+ 123   2                      dat = 0x0000U; //correct for prevent rolling F and 0 in count error
+ 124   2              }
+ 125   1      
+ 126   1              return dat;
+ 127   1      }
+ 128          
+ 129          
+ 130          void i2c_master_write(U8 slave_addr, U16 addr, U16 dat, U8 Byte_Length)
+ 131          {
+ 132   1              SEG_XDATA volatile U8   addr_num = 0U; 
+ 133   1              NUM_ERRORS = 0U;                        // Error counter
+ 134   1              
+ 135   1              if ( Byte_Length == I2C_2BYTE_RW )
+ 136   1              {
+ 137   2                      number_wd = 4U;   
+ 138   2                      number_rd = 0U;
+ 139   2      
+ 140   2                      SMB_DATA_OUT[0] = (U8)((addr>>8U)&0x00FFU);
+ 141   2                      SMB_DATA_OUT[1] = (U8)(addr & 0x00FFU);
+ 142   2                      SMB_DATA_OUT[2] = (U8)((dat>>8U)&0x00FFU);
+ 143   2                      SMB_DATA_OUT[3] = (U8)(dat & 0x00FFU);
+ 144   2              }
+ 145   1              else
+ 146   1              {
+ 147   2                      number_wd = 2U;   
+ 148   2                      number_rd = 0U;
+ 149   2                      SMB_DATA_OUT[0] = (U8)(addr & 0x00FFU);
+ 150   2                      SMB_DATA_OUT[1] = (U8)(dat & 0x00FFU);
+ 151   2              }
+ 152   1              TARGET = slave_addr;                    // Target the Slave for next SMBus transfer
+ 153   1              SMB_Write();                                    // Initiate SMBus write
+ 154   1      
+ 155   1              if( NUM_ERRORS > 0U ){
+ 156   2                      NUM_ERRORS = 0U;
+ 157   2              }
+ 158   1      }
+ 159          
+ 160          
+ 161          //-----------------------------------------------------------------------------
+ 162          // Interrupt Service Routines
+ 163          //-----------------------------------------------------------------------------
+ 164          
+ 165          //-----------------------------------------------------------------------------
+ 166          // Timer3 Interrupt Service Routine (ISR)
+ 167          //-----------------------------------------------------------------------------
+ 168          //
+ 169          // A Timer3 interrupt indicates an SMBus SCL low timeout.
+ 170          // The SMBus is disabled and re-enabled here
+ 171          //
+ 172          //-----------------------------------------------------------------------------
+ 173          #ifndef __PST_PolySpace__
+ 174          INTERRUPT(TIMER3_ISR, INTERRUPT_TIMER3)
+ 175          #else
+              void TIMER3_ISR(void)   // Frame Sync
+              #endif
+ 178          {
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 4   
+
+ 179   1              SMB0CF &= (U8)(~0x80U);                         // Disable SMBus
+ 180   1              SMB0CF |= (U8)0x80U;                                    // Re-enable SMBus
+ 181   1              TMR3CN &= (U8)(~0x80U);                         // Clear Timer3 interrupt-pending flag
+ 182   1              STA = (U8)0x00;
+ 183   1              SMB_BUSY = 0U;                                  // Free SMBus
+ 184   1      }
+ 185          
+ 186          //-----------------------------------------------------------------------------
+ 187          // SMBus Interrupt Service Routine (ISR)
+ 188          //-----------------------------------------------------------------------------
+ 189          //
+ 190          // SMBus ISR state machine
+ 191          // - Master only implementation - no slave or arbitration states defined
+ 192          // - All incoming data is written to global variable array <SMB_DATA_IN>
+ 193          // - All outgoing data is read from global variable array <SMB_DATA_OUT>
+ 194          //
+ 195          //-----------------------------------------------------------------------------
+ 196          #ifndef __PST_PolySpace__
+ 197          INTERRUPT(SMBUS0_ISR, INTERRUPT_SMBUS0)
+ 198          #else
+              void SMBUS0_ISR(void)   // Frame Sync
+              #endif
+ 201          {
+ 202   1              static SEG_XDATA U8 status = 0x00U;
+ 203   1              static SEG_XDATA U8 rec_byte_counter = 0U;
+ 204   1              static SEG_XDATA U8 sent_byte_counter = 0U;
+ 205   1      
+ 206   1              SEG_XDATA U8 FAIL = 0U; // Used by the ISR to flag failed transfers
+ 207   1              
+ 208   1              status = (U8)ARBLOST;
+ 209   1      
+ 210   1              if (status == 0x00U)    // Check for errors
+ 211   1              {
+ 212   2                      // Normal operation
+ 213   2                      status = (U8)SMB0CN;
+ 214   2                      status &=  (U8)0xF0;
+ 215   2      
+ 216   2                      switch (status) // Status vector
+ 217   2                      {
+ 218   3                              // Master Transmitter/Receiver: START condition transmitted.
+ 219   3                              case SMB_MTSTA:
+ 220   3                                      SMB0DAT = (U8)(TARGET | SMB_RW);        // Load address of the target slave
+ 221   3                                      STA = (U8)0x00;                         // Manually clear START bit
+ 222   3                                      rec_byte_counter = 1U;          // Reset the counter
+ 223   3                                      sent_byte_counter = 1U;         // Reset the counter
+ 224   3                                      break;
+ 225   3      
+ 226   3                              // Master Transmitter: Data byte transmitted
+ 227   3                              case SMB_MTDB:
+ 228   3                                      status = (U8)ACK;
+ 229   3                                      if (status != 0x00U)    // Slave ACK?
+ 230   3                                      {
+ 231   4                                              if (SMB_RW == WRITE)    // If this transfer is a WRITE,
+ 232   4                                              {
+ 233   5                                                      if (sent_byte_counter <= number_wd)
+ 234   5                                                      {
+ 235   6                                                              // send data byte
+ 236   6                                                              SMB0DAT = SMB_DATA_OUT[(sent_byte_counter-1U)];
+ 237   6                                                              sent_byte_counter++;
+ 238   6                                                      }
+ 239   5                                                      else
+ 240   5                                                      {
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 5   
+
+ 241   6                                                              STO = (U8)0x01; // Set STO to terminate transfer
+ 242   6                                                              SMB_BUSY = 0U;  // And free SMBus interface
+ 243   6                                                      }
+ 244   5                                              }
+ 245   4                                      }
+ 246   3                                      else // If slave NACK,
+ 247   3                                      {
+ 248   4                                              STO = (U8)0x01; // Send STOP condition, followed
+ 249   4                                              STA = (U8)0x01; // By a START
+ 250   4                                              NUM_ERRORS++;   // Indicate error
+ 251   4                                      }
+ 252   3                                      break;
+ 253   3               // Master Receiver: byte received
+ 254   3               case SMB_MRDB:
+ 255   3                  if (rec_byte_counter < number_rd)
+ 256   3                  {
+ 257   4                     SMB_DATA_IN[(rec_byte_counter-1U)] = (U8)SMB0DAT;        // Store received byte
+ 258   4                     ACK = (U8)0x01;                                                                          // Send ACK to indicate byte received
+ 259   4                     rec_byte_counter++;                                                              // Increment the byte counter
+ 260   4                  }
+ 261   3                  else
+ 262   3                  {
+ 263   4                     SMB_DATA_IN[(rec_byte_counter-1U)] = (U8)SMB0DAT;        // Store received byte
+ 264   4                     ACK = (U8)0x00;                                                                          // Send NACK to indicate last byte of this transfer
+ 265   4                     STO = (U8)0x01;                                                                          // Send STOP to terminate transfer
+ 266   4      
+ 267   4                                 SMB_BUSY = 0U;                                                                       // Free SMBus interface
+ 268   4                  }
+ 269   3                  break;
+ 270   3      
+ 271   3               default:
+ 272   3                  FAIL = 1U;  // Indicate failed transfer and handle at end of ISR
+ 273   3                  break;
+ 274   3      
+ 275   3            } // end switch
+ 276   2         }
+ 277   1         else
+ 278   1         {
+ 279   2            // ARBLOST = 1, error occurred... abort transmission
+ 280   2            FAIL = 1U;
+ 281   2         } // end ARBLOST if
+ 282   1      
+ 283   1         if (FAIL == 1U)      // If the transfer failed,
+ 284   1         {
+ 285   2            SMB0CF &= (U8)(~0x80U);   // Reset communication
+ 286   2            SMB0CF |= (U8)0x80U;
+ 287   2            STA = (U8)0x00U;
+ 288   2            STO = (U8)0x00U;
+ 289   2            ACK = (U8)0x00U;
+ 290   2      
+ 291   2            SMB_BUSY = 0U;                            // Free SMBus
+ 292   2      
+ 293   2            FAIL = 0U;
+ 294   2      
+ 295   2            NUM_ERRORS++;                             // Indicate an error occurred
+ 296   2      
+ 297   2            //DTC_ISP_CM_ERROR;
+ 298   2         }
+ 299   1      
+ 300   1         SI = (U8)0x00;       // Clear interrupt flag
+ 301   1      }
+ 302          
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 6   
+
+ 303          //-----------------------------------------------------------------------------
+ 304          // Support Functions
+ 305          //-----------------------------------------------------------------------------
+ 306          
+ 307          //-----------------------------------------------------------------------------
+ 308          // SMB_Write
+ 309          //-----------------------------------------------------------------------------
+ 310          //
+ 311          // Return Value : None
+ 312          // Parameters   : None
+ 313          //
+ 314          // Writes a single byte to the slave with address specified by the <TARGET>
+ 315          // variable.writeSpiFlash
+ 316          // Calling sequence:
+ 317          // 1) Write target slave address to the <TARGET> variable
+ 318          // 2) Write outgoing data to the <SMB_DATA_OUT> variable array
+ 319          // 3) Call SMB_Write()
+ 320          //
+ 321          //-----------------------------------------------------------------------------
+ 322          void SMB_Write (void)
+ 323          {
+ 324   1         SEG_XDATA U8 SFRPAGE_save = SFRPAGE;
+ 325   1         SEG_XDATA U8 On_Time = FALSE;
+ 326   1         SFRPAGE = ACTIVE_PAGE;
+ 327   1      
+ 328   1         SMB_BUSY = 1U;                       // Claim SMBus (set to busy)
+ 329   1         SMB_RW = 0x00U;                         // Mark this transfer as a WRITE
+ 330   1         STA = 0x01U;                            // Start transfer
+ 331   1      
+ 332   1              Delay_Time_Set(TID_I2C_BUSY_CHECK,DT_I2C_BUSY_CHECK);
+ 333   1              while (SMB_BUSY == 1U)
+ 334   1              {
+ 335   2                      On_Time = Delay_Time_Get(TID_I2C_BUSY_CHECK);
+ 336   2                      if ( On_Time == TRUE)
+ 337   2                      {
+ 338   3                              SMB_BUSY = 0U;
+ 339   3                              g_I2C_Err_Cnt++;
+ 340   3                      }
+ 341   2              }
+ 342   1              Delay_Time_Expire(TID_I2C_BUSY_CHECK);
+ 343   1         SFRPAGE = SFRPAGE_save;
+ 344   1      }
+ 345          //mychange
+ 346          void lcd_send_cmd (char cmd)
+ 347          {
+ 348   1        char data_u, data_l;
+ 349   1              U8 data_t[4];
+ 350   1              data_u = (cmd&0xf0);
+ 351   1              data_l = ((cmd<<4)&0xf0);
+ 352   1              data_t[0] = data_u|0x0C;  //en=1, rs=0
+ 353   1              data_t[1] = data_u|0x08;  //en=0, rs=0
+ 354   1              data_t[2] = data_l|0x0C;  //en=1, rs=0
+ 355   1              data_t[3] = data_l|0x08;  //en=0, rs=0
+ 356   1              //HAL_I2C_Master_Transmit (&hi2c1, SLAVE_ADDRESS_LCD,(uint8_t *) data_t, 4, 100);
+ 357   1              i2c_master_write_tam(SLAVE_ADDRESS_LCD, data_t,4);
+ 358   1      }
+ 359          
+ 360          void lcd_send_data (char data1)
+ 361          {
+ 362   1              char data_u, data_l;
+ 363   1              U8 data_t[4];
+ 364   1              data_u = (data1&0xf0);
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 7   
+
+ 365   1              data_l = ((data1<<4)&0xf0);
+ 366   1              data_t[0] = data_u|0x0D;  //en=1, rs=0
+ 367   1              data_t[1] = data_u|0x09;  //en=0, rs=0
+ 368   1              data_t[2] = data_l|0x0D;  //en=1, rs=0
+ 369   1              data_t[3] = data_l|0x09;  //en=0, rs=0
+ 370   1              //HAL_I2C_Master_Transmit (&hi2c1, SLAVE_ADDRESS_LCD,(uint8_t *) data_t, 4, 100);
+ 371   1              i2c_master_write_tam(SLAVE_ADDRESS_LCD, data_t,4);
+ 372   1      }
+ 373          
+ 374          void lcd_init (void)
+ 375          {
+ 376   1              lcd_send_cmd (0x33); /* set 4-bits interface */
+ 377   1              lcd_send_cmd (0x32);
+ 378   1              Wait_ms(50);
+ 379   1              lcd_send_cmd (0x28); /* start to set LCD function */
+ 380   1              Wait_ms(50);
+ 381   1              lcd_send_cmd (0x01); /* clear display */
+ 382   1              Wait_ms(50);
+ 383   1              lcd_send_cmd (0x06); /* set entry mode */
+ 384   1              Wait_ms(50);
+ 385   1              lcd_send_cmd (0x0c); /* set display to on */    
+ 386   1              Wait_ms(50);
+ 387   1              lcd_send_cmd (0x02); /* move cursor to home and set data address to 0 */
+ 388   1              Wait_ms(50);
+ 389   1              lcd_send_cmd (0x80);
+ 390   1      }
+ 391          
+ 392          void lcd_send_string (char *str)
+ 393          {
+ 394   1              while (*str) lcd_send_data (*str++);
+ 395   1      }
+ 396          
+ 397          void lcd_clear_display (void)
+ 398          {
+ 399   1              lcd_send_cmd (0x01); //clear display
+ 400   1      }
+ 401          
+ 402          void lcd_goto_XY (int row, int col)
+ 403          {
+ 404   1              U8 pos_Addr;
+ 405   1              switch(row){
+ 406   2                      case 2:
+ 407   2                              pos_Addr = 0x80 | (0x40 + col);
+ 408   2                              break;
+ 409   2                      case 3:
+ 410   2                              pos_Addr = 0x80 | (0x14 + col);
+ 411   2                              break;
+ 412   2                      case 4:
+ 413   2                              pos_Addr = 0x80 | (0x54 + col);
+ 414   2                              break;
+ 415   2                      default:
+ 416   2                              pos_Addr = 0x80 + row - 1 + col;
+ 417   2                              break;
+ 418   2              }
+ 419   1              lcd_send_cmd(pos_Addr);
+ 420   1      }
+ 421                  //HAL_I2C_Master_Transmit (&hi2c1, SLAVE_ADDRESS_LCD,(uint8_t *) data_t, 4, 100);
+ 422          void i2c_master_write_tam(U8 slave_addr, U8 *pData, U8 Byte_Length)
+ 423          {
+ 424   1              SEG_XDATA U8 i = 0U;
+ 425   1              number_wd = Byte_Length;  
+ 426   1              number_rd = 0U;
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 8   
+
+ 427   1              for(i=0;i<Byte_Length;i++){
+ 428   2                      SMB_DATA_OUT[i] = pData[i];
+ 429   2              }
+ 430   1              // if ( Byte_Length == 4 )
+ 431   1              // {
+ 432   1                      // number_wd = 4U;   
+ 433   1                      // number_rd = 0U;
+ 434   1      
+ 435   1                      // SMB_DATA_OUT[0] = pData[0];
+ 436   1                      // SMB_DATA_OUT[1] = pData[1];
+ 437   1                      // SMB_DATA_OUT[2] = pData[2];
+ 438   1                      // SMB_DATA_OUT[3] = pData[3];
+ 439   1              // }
+ 440   1              // else
+ 441   1              // {
+ 442   1                      // number_wd = 1U;   
+ 443   1                      // number_rd = 0U;
+ 444   1                      // SMB_DATA_OUT[0] = pData[0];
+ 445   1              // }
+ 446   1              TARGET = slave_addr;                    // Target the Slave for next SMBus transfer
+ 447   1              SMB_Write();                                    // Initiate SMBus write
+ 448   1      }
+ 449          //-----------------------------------------------------------------------------
+ 450          // SMB_Read
+ 451          //-----------------------------------------------------------------------------
+ 452          //
+ 453          // Return Value : None
+ 454          // Parameters   : None
+ 455          //
+ 456          // Reads a single byte from the slave with address specified by the <TARGET>
+ 457          // variable.
+ 458          // Calling sequence:
+ 459          // 1) Write target slave address to the <TARGET> variable
+ 460          // 2) Call SMB_Write()
+ 461          // 3) Read input data from <SMB_DATA_IN> variable array
+ 462          //
+ 463          //-----------------------------------------------------------------------------
+ 464          void SMB_Read (void)
+ 465          {
+ 466   1         SEG_XDATA U8 On_Time = FALSE;
+ 467   1         SEG_XDATA U8 SFRPAGE_save = SFRPAGE;
+ 468   1         SFRPAGE = ACTIVE_PAGE;
+ 469   1      
+ 470   1         SMB_BUSY = 1U;                       // Claim SMBus (set to busy)
+ 471   1         SMB_RW = 0x01U;                         // Mark this transfer as a READ
+ 472   1      
+ 473   1         STA = (U8)0x01;                            // Start transfer
+ 474   1      
+ 475   1              Delay_Time_Set(TID_I2C_BUSY_CHECK,DT_I2C_BUSY_CHECK);
+ 476   1              while (SMB_BUSY == 1U)
+ 477   1              {
+ 478   2                      On_Time = Delay_Time_Get(TID_I2C_BUSY_CHECK);
+ 479   2                      if ( On_Time == TRUE)
+ 480   2                      {
+ 481   3                              SMB_BUSY = 0U;
+ 482   3                              g_I2C_Err_Cnt++;
+ 483   3                      }
+ 484   2              }
+ 485   1              Delay_Time_Expire(TID_I2C_BUSY_CHECK);
+ 486   1      
+ 487   1         SFRPAGE = SFRPAGE_save;
+ 488   1      }
+C51 COMPILER V9.51   DRV_I2C                                                               12/28/2023 13:49:14 PAGE 9   
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1118    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     18      12
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      25
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
