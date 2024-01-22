@@ -15,13 +15,13 @@ void Delay_ms_tim0(unsigned int t)
 }
 
 void main(){
-	P2 = 0;
+	P1 = 0;
 	TMOD &= 0xF0;	//xoa cac bit tren thanh ghi TMOD cua T0
 	TMOD |= 0x01;	//chon mode 1 cho tim0
     while (1)
     {
         /* code */
-        P2 = ~P2;
+        P1 = ~P1;
 		Delay_ms_tim0(100);
     }
     

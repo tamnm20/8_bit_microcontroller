@@ -1,6 +1,6 @@
 
-BL51 BANKED LINKER/LOCATER V6.22 - SN: K1FSC-U07XFZ
-COPYRIGHT KEIL ELEKTRONIK GmbH 1987 - 2009
+BL51 BANKED LINKER/LOCATER V6.22.4.0 - SN: K1FSC-U07XFZ
+COPYRIGHT (C) 1987-2021, Arm Limited or its Affiliates. All rights reserved.
 "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\STARTUP.obj",
 "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\main.obj",
 "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\F50x_Target_App_InfoBlock.obj",

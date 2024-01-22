@@ -18,10 +18,10 @@ SFRPAGE = ACTIVE_PAGE;
    EA = 1;                             // Enable global interrupts
   
 
-     while (1){
-   P2 = ~P2 ;
+   while (1){
+	   P2 = ~P2 ;
 
-   Delay(500);
+	   Delay(500);
    }   
    TMOD &= 0xF0;
    TMOD  |= 0x10; 

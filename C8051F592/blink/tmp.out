@@ -1,0 +1,10 @@
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0 - SN: K1FSC-Y07XVZ
+COPYRIGHT ARM Germany GmbH 1987 - 2017
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\F50x_Target_App_InfoBlock.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\L51_BANK.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\STARTUP.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\main.obj"  TO "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\blink" NOOL CODE(0x4000-0x7FFF) BANK0(?CO?F50x_Target_App_InfoBlock(0x7FF0))  BANKAREA(8000H,0FFFFH) 
+
+Program Size: data=10.0 xdata=0 code=198
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,186 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              01/09/2024 10:38:25 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.exe main.c DB OE BR INTVECTOR(0X4000) INCDIR(c:\SiLabs\MCU\Inc)
+
+line level    source
+
+   1          #include <compiler_defs.h>
+   2          #include <C8051F580_defs.h>            // SFR declarations
+   3          
+   4          #define SYSCLK      24000000           // SYSCLK frequency in Hz
+   5          SBIT (LED, SFR_P2, 0);                 // LED==1 means ON
+   6          SBIT (LED1, SFR_P2, 1);
+   7          
+   8          void OSCILLATOR_Init (void);
+   9          void PORT_Init (void);
+  10          void TIMER0_Init (void);
+  11          void Delay(unsigned int t);
+  12          void T0_Wait_ms (U8 ms);
+  13          
+  14          void main (void)
+  15          {
+  16   1      SFRPAGE = ACTIVE_PAGE;
+  17   1         PCA0MD &= ~0x40;                    // Clear watchdog timer enable
+  18   1         OSCILLATOR_Init ();                 // Initialize Oscillator
+  19   1         TIMER0_Init ();                     // Initialize the Timer2
+  20   1         PORT_Init ();                       // Initialize Ports
+  21   1         EA = 1;                             // Enable global interrupts
+  22   1         P2 =0;
+  23   1      
+  24   1         while (1){
+  25   2                 P2 = ~P2 ;
+  26   2      
+  27   2                 //Delay(50);
+  28   2                 T0_Wait_ms(1);
+  29   2         }   
+  30   1         // TMOD &= 0xF0;
+  31   1         // TMOD  |= 0x10; 
+  32   1      }
+  33          
+  34          void Delay(unsigned int t){
+  35   1      do{
+  36   2            TL0 = 0x1F;
+  37   2            TH0 = 0xD1;
+  38   2            TR0=1; // bat dau dem 
+  39   2            while(!TF0);
+  40   2            TR0 = 0;// ngung dem 
+  41   2            TF0 = 0;;
+  42   2         t--;
+  43   2         }
+  44   1         while(t != 0);
+  45   1      }
+  46          
+  47          void PORT_Init (void)
+  48          {
+  49   1         U8 SFRPAGE_save = SFRPAGE;
+  50   1         SFRPAGE = CONFIG_PAGE;
+  51   1      
+  52   1         //XBR2 = 0x40;                        // Enable crossbar
+  53   1         P2MDOUT = 0x03;                     // Set LED to push-pull
+  54   1      
+  55   1         SFRPAGE = SFRPAGE_save;
+C51 COMPILER V9.59.0.0   MAIN                                                              01/09/2024 10:38:25 PAGE 2   
+
+  56   1      }
+  57          
+  58          void OSCILLATOR_Init (void)
+  59          {
+  60   1         U8 SFRPAGE_save = SFRPAGE;
+  61   1         SFRPAGE = CONFIG_PAGE;
+  62   1      
+  63   1         //OSCICN = 0x86;
+  64   1         OSCICN |= 0x07;
+  65   1      
+  66   1         SFRPAGE = SFRPAGE_save;
+  67   1      }
+  68          
+  69          void TIMER0_Init(void)
+  70          {
+  71   1         U8 SFRPAGE_save = SFRPAGE;
+  72   1         SFRPAGE = ACTIVE_PAGE;
+  73   1         //OSCICN = 0x84;
+  74   1         TMOD  = 0x01;                       // Timer0 in 16-bit mode
+  75   1         //CKCON = 0x02;                       // Timer0 uses a 1:48 prescaler
+  76   1         ET0   = 1;                          // Timer0 interrupt enabled
+  77   1         TCON  = 0x10;                       // Timer0 ON
+  78   1      
+  79   1         SFRPAGE = SFRPAGE_save;
+  80   1      }
+  81          
+  82          
+  83          // 16 bit C/T 
+  84          void T0_Wait_ms (U8 ms)
+  85          {
+  86   1         // All registers are on all pages, so no need to set SFR page
+  87   1      
+  88   1         TCON &= ~0x30;                      // Stop Timer0; Clear TF0
+  89   1         TMOD &= ~0x0f;                      // 16-bit free run mode
+  90   1         TMOD |=  0x01;
+  91   1      
+  92   1         CKCON |= 0x04;                      // Timer0 counts SYSCLKs
+  93   1      
+  94   1         while (ms) {
+  95   2            TR0 = 0;                         // Stop Timer0
+  96   2            TH0 = -(S8)(SYSCLK/1000 >> 8);   // Overflow in 1ms
+  97   2            TL0 = -(S8)(SYSCLK/1000);
+  98   2            TF0 = 0;                         // Clear overflow indicator
+  99   2            TR0 = 1;                         // Start Timer0
+ 100   2            while (!TF0);                    // Wait for overflow
+ 101   2            ms--;                            // Update ms counter
+ 102   2         }
+ 103   1      
+ 104   1         TR0 = 0;                            // Stop Timer0
+ 105   1      }
+ 106          
+ 107          // 8 bit C/T Auto reload
+ 108          // void T0_Wait_ms (U8 ms)
+ 109          // {
+ 110             // All registers are on all pages, so no need to set SFR page
+ 111          
+ 112             // TCON &= ~0x30;                      // Stop Timer0; Clear TF0
+ 113             // TMOD &= ~0x0f;                      // 16-bit free run mode
+ 114             // TMOD |=  0x01;
+ 115          
+ 116             // CKCON |= 0x04;                      // Timer0 counts SYSCLKs
+ 117          
+C51 COMPILER V9.59.0.0   MAIN                                                              01/09/2024 10:38:25 PAGE 3   
+
+ 118             // while (ms) {
+ 119                // TR0 = 0;                         // Stop Timer0
+ 120                // TH0 = -(S8)(SYSCLK/1000 >> 8);   // Overflow in 1ms
+ 121                // TL0 = -(S8)(SYSCLK/1000);
+ 122                // TF0 = 0;                         // Clear overflow indicator
+ 123                // TR0 = 1;                         // Start Timer0
+ 124                // while (!TF0);                    // Wait for overflow
+ 125                // ms--;                            // Update ms counter
+ 126             // }
+ 127          
+ 128             // TR0 = 0;                            // Stop Timer0
+ 129          // }
+ 130          
+ 131          
+ 132          // void TIMER0_Init (void)
+ 133          // {
+ 134             // No need to set SFRPAGE as all registers accessed in this function
+ 135             // are available on all pages
+ 136          
+ 137             // TH0 = 0x06;                         // Init Timer0 reload register
+ 138             // TL0 = TH0;                          // Set the intial Timer0 value
+ 139          
+ 140             // TMOD  = 0x02;                       // Timer0 in 8-bit reload mode
+ 141             // CKCON = 0x02;                       // Timer0 uses a 1:48 prescaler
+ 142             // ET0   = 1;                          // Timer0 interrupt enabled
+ 143             // TCON  = 0x10;                       // Timer0 ON
+ 144          // }
+ 145          
+ 146          // INTERRUPT(Timer0_ISR, INTERRUPT_TIMER0)
+ 147          // {
+ 148             // The Timer0 interrupt flag is automatically cleared by vectoring to
+ 149             // the Timer0 ISR
+ 150          
+ 151             // static U8 count = 0;
+ 152             // count++;                            // Increment when an interrupt occurs
+ 153          
+ 154             // if (count == 250)
+ 155             // {
+ 156                // LED = !LED;                      // Change state of LED
+ 157                // count = 0;                       // Clear the counter
+ 158             // }
+ 159          // }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    129    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

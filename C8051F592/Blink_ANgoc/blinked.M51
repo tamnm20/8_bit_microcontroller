@@ -1,32 +1,34 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        10/30/2023  13:21:22  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    01/09/2024  11:38:26  PAGE 1
 
 
-BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
-C:\KEIL\C51\BIN\BL51.EXE C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\STARTUP.obj, C:\Users\TAMRD\Documents\Docume
->> nts\C8051F592\Blink\main.obj, C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\F50x_Target_App_InfoBlock.obj, C:\Us
->> ers\TAMRD\Documents\Documents\C8051F592\Blink\L51_BANK.obj, C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\mgr_mc
->> u.obj, C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\drv_mcu.obj, C:\Users\TAMRD\Documents\Documents\C8051F592\B
->> link\drv_timer.obj TO C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blinked NOOL CODE (0X4000-0X7FFF) BANK0 (?CO
->> ?F50X_TARGET_APP_INFOBLOCK (0X7FF0)) BANKAREA (8000H, 0FFFFH)
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\STARTUP.obj, C:\Users\TAMR
+>> D\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\main.obj, C:\Users\TAMRD\Documents\8_bit_microcontroller\C805
+>> 1F592\Blink_ANgoc\F50x_Target_App_InfoBlock.obj, C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc
+>> \L51_BANK.obj, C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\mgr_mcu.obj, C:\Users\TAMRD\Docum
+>> ents\8_bit_microcontroller\C8051F592\Blink_ANgoc\drv_mcu.obj, C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F59
+>> 2\Blink_ANgoc\drv_timer.obj TO C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\blinked NOOL CODE
+>>  (0X4000-0X7FFF) BANK0 (?CO?F50X_TARGET_APP_INFOBLOCK (0X7FF0)) BANKAREA (8000H, 0FFFFH)
 
 
 MEMORY MODEL: SMALL
 
 
 INPUT MODULES INCLUDED:
-  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\STARTUP.obj (?C_STARTUP)
-  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\main.obj (MAIN)
-  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\F50x_Target_App_InfoBlock.obj (F50X_TARGET_APP_INFOBLOCK)
-  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\L51_BANK.obj (?BANK?SWITCHING)
-  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\mgr_mcu.obj (MGR_MCU)
-  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\drv_mcu.obj (DRV_MCU)
-  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\drv_timer.obj (DRV_TIMER)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\STARTUP.obj (?C_STARTUP)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\main.obj (MAIN)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\F50x_Target_App_InfoBlock.obj (F50X_TARGET_APP_IN
+>> FOBLOCK)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\L51_BANK.obj (?BANK?SWITCHING)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\mgr_mcu.obj (MGR_MCU)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\drv_mcu.obj (DRV_MCU)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\drv_timer.obj (DRV_TIMER)
   C:\KEIL\C51\LIB\C51S.LIB (?C?ULCMP)
   C:\KEIL\C51\LIB\C51S.LIB (?C?LSTXDATA)
   C:\KEIL\C51\LIB\C51S.LIB (?C?LSTKXDATA)
 
 
-LINK MAP OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blinked (?C_STARTUP)
+LINK MAP OF MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\blinked (?C_STARTUP)
 
 
             TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
@@ -57,11 +59,11 @@ LINK MAP OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blinked 
             CODE    42D9H     009AH     UNIT         ?PR?_DELAY_TIME_GET?DRV_TIMER
             CODE    4373H     0071H     UNIT         ?PR?GLOBAL_TIMER_INIT?DRV_TIMER
             CODE    43E4H     0050H     INBLOCK      ?BANK?SELECT
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2024  11:38:26  PAGE 2
+
+
             CODE    4434H     004EH     UNIT         ?C?LIB_CODE
             CODE    4482H     0039H     UNIT         ?PR?MAIN?MAIN
-BL51 BANKED LINKER/LOCATER V6.22                                                      10/30/2023  13:21:22  PAGE 2
-
-
             CODE    44BBH     0022H     UNIT         ?PR?TIMER2_INIT?DRV_TIMER
             CODE    44DDH     001AH     UNIT         ?PR?PORT_INIT?DRV_MCU
                     44F7H     0009H                  *** GAP ***
@@ -76,7 +78,7 @@ LINK MAP OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blinked 
 
 
 
-SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blinked (?C_STARTUP)
+SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\blinked (?C_STARTUP)
 
   VALUE           TYPE          NAME
   ----------------------------------
@@ -117,11 +119,11 @@ SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blin
   C:4528H         LINE#         199
   -------         ENDMOD        ?C_STARTUP
 
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2024  11:38:26  PAGE 3
+
+
   -------         MODULE        MAIN
   C:0000H         SYMBOL        _ICE_DUMMY_
-BL51 BANKED LINKER/LOCATER V6.22                                                      10/30/2023  13:21:22  PAGE 3
-
-
   B:00A0H.1       PUBLIC        LED_STATUS_UPDOWNLOAD
   C:402EH         PUBLIC        TIMER2_ISR
   B:00A0H.0       PUBLIC        LED_STATUS_ERROR
@@ -177,11 +179,11 @@ SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blin
   C:40CFH         LINE#         62
   C:40CFH         LINE#         63
   C:40E4H         LINE#         64
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2024  11:38:26  PAGE 4
+
+
   C:40ECH         LINE#         65
   C:40ECH         LINE#         67
-BL51 BANKED LINKER/LOCATER V6.22                                                      10/30/2023  13:21:22  PAGE 4
-
-
   C:40ECH         LINE#         68
   C:40F2H         LINE#         69
   C:4113H         LINE#         70
@@ -237,11 +239,11 @@ SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blin
   N:0000H         SYMBOL        BANK0
   N:0004H         SYMBOL        BANK1
   N:0008H         SYMBOL        BANK2
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2024  11:38:26  PAGE 5
+
+
   N:000CH         SYMBOL        BANK3
   N:0004H         SYMBOL        CNT
-BL51 BANKED LINKER/LOCATER V6.22                                                      10/30/2023  13:21:22  PAGE 5
-
-
   D:0083H         SYMBOL        DPH
   D:0082H         SYMBOL        DPL
   B:00A8H.7       SYMBOL        EA
@@ -297,11 +299,11 @@ SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blin
   C:4537H         LINE#         7
   C:453AH         LINE#         8
   C:453DH         LINE#         9
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2024  11:38:26  PAGE 6
+
+
   C:4540H         LINE#         10
   -------         ENDPROC       OSC_INIT
-BL51 BANKED LINKER/LOCATER V6.22                                                      10/30/2023  13:21:22  PAGE 6
-
-
   -------         PROC          PORT_INIT
   C:44DDH         LINE#         12
   C:44DDH         LINE#         13
@@ -357,11 +359,11 @@ SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blin
   C:438EH         LINE#         18
   C:439EH         LINE#         19
   C:43B3H         LINE#         20
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2024  11:38:26  PAGE 7
+
+
   C:43C8H         LINE#         21
   C:43DDH         LINE#         22
-BL51 BANKED LINKER/LOCATER V6.22                                                      10/30/2023  13:21:22  PAGE 7
-
-
   C:43E1H         LINE#         31
   -------         ENDPROC       GLOBAL_TIMER_INIT
   -------         PROC          TIMER2_INIT
@@ -417,11 +419,11 @@ SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blin
   C:4316H         LINE#         159
   C:4316H         LINE#         160
   C:4350H         LINE#         161
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2024  11:38:26  PAGE 8
+
+
   C:4350H         LINE#         162
   C:436DH         LINE#         163
-BL51 BANKED LINKER/LOCATER V6.22                                                      10/30/2023  13:21:22  PAGE 8
-
-
   C:4370H         LINE#         164
   C:4370H         LINE#         165
   C:4370H         LINE#         166

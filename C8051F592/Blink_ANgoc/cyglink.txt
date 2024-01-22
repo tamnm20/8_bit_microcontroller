@@ -1,7 +1,7 @@
-"C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\STARTUP.obj",
-"C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\main.obj",
-"C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\F50x_Target_App_InfoBlock.obj",
-"C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\L51_BANK.obj",
-"C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\mgr_mcu.obj",
-"C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\drv_mcu.obj",
-"C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\drv_timer.obj"  TO "C:\Users\TAMRD\Documents\Documents\C8051F592\Blink\blinked" NOOL CODE(0x4000-0x7FFF) BANK0(?CO?F50x_Target_App_InfoBlock(0x7FF0))  BANKAREA(8000H,0FFFFH) 
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\STARTUP.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\main.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\F50x_Target_App_InfoBlock.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\L51_BANK.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\mgr_mcu.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\drv_mcu.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\drv_timer.obj"  TO "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Blink_ANgoc\blinked" NOOL CODE(0x4000-0x7FFF) BANK0(?CO?F50x_Target_App_InfoBlock(0x7FF0))  BANKAREA(8000H,0FFFFH) 
