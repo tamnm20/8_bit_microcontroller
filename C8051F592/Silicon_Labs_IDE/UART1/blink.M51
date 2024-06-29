@@ -1,0 +1,322 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    06/27/2024  08:37:09  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\L51_BANK.obj, C
+>> :\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\STARTUP.obj, C:\Users\TAMRD\Documents\
+>> 8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\F50x_Target_App_InfoBlock.obj, C:\Users\TAMRD\Documents\8_bit_
+>> microcontroller\C8051F592\Silicon_Labs_IDE\UART1\uart.obj TO C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592
+>> \Silicon_Labs_IDE\UART1\blink NOOL CODE (0X4000-0X7FFF) BANK0 (?CO?F50X_TARGET_APP_INFOBLOCK (0X7FF0)) BANKAREA (8000
+>> H, 0FFFFH)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\L51_BANK.obj (?BANK?SWITCHING)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\STARTUP.obj (?C_STARTUP)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\F50x_Target_App_InfoBlock.obj (F50X_TA
+>> RGET_APP_INFOBLOCK)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\uart.obj (UART)
+  C:\KEIL\C51\LIB\C51S.LIB (PRINTF)
+  C:\KEIL\C51\LIB\C51S.LIB (_GETKEY)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CSTPTR)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?PLDIIDATA)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CCASE)
+  C:\KEIL\C51\LIB\C51S.LIB (PUTCHAR)
+
+
+LINK MAP OF MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\blink (?BANK?SWITCH
+>> ING)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0014H     UNIT         ?DT?PRINTF?PRINTF
+            DATA    001CH     0001H     UNIT         ?BANK?DATA
+            DATA    001DH     0001H     UNIT         ?DT?MAIN?UART
+                    001EH     0002H                  *** GAP ***
+            BIT     0020H.0   0001H.1   UNIT         ?BI?PRINTF?PRINTF
+                    0021H.1   0000H.7                *** GAP ***
+            IDATA   0022H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+                    0000H     4000H                  *** GAP ***
+            CODE    4000H     0003H     ABSOLUTE     
+            CODE    4003H     035CH     UNIT         ?PR?PRINTF?PRINTF
+            CODE    435FH     008EH     UNIT         ?C?LIB_CODE
+            CODE    43EDH     000FH     UNIT         ?C_C51STARTUP
+                    43FCH     0004H                  *** GAP ***
+            CODE    4400H     0045H     PAGE         ?BANK?SWITCH
+            CODE    4445H     0044H     UNIT         ?CO?UART
+            CODE    4489H     003AH     UNIT         ?PR?MAIN?UART
+            CODE    44C3H     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
+            CODE    44EAH     0021H     UNIT         ?PR?UART1_INIT?UART
+            CODE    450BH     0014H     UNIT         ?PR?PORT_INIT?UART
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  06/27/2024  08:37:09  PAGE 2
+
+
+            CODE    451FH     000EH     UNIT         ?PR?SYSCLK_INIT?UART
+            CODE    452DH     000CH     UNIT         ?BANK?SELECT
+            CODE    4539H     000AH     UNIT         ?PR?_GETKEY?_GETKEY
+
+            * * * * * * *   C O D E   B A N K   0   * * * * * * *
+                    0000H     7FF0H                  *** GAP ***
+            BANK0   7FF0H     0004H     UNIT         ?CO?F50X_TARGET_APP_INFOBLOCK
+
+
+
+SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\UART1\blink (?BANK?SW
+>> ITCHING)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?BANK?SWITCHING
+  C:452DH         SEGMENT       ?BANK?SELECT
+  D:001CH         SEGMENT       ?BANK?DATA
+  C:4400H         SEGMENT       ?BANK?SWITCH
+  C:4400H         PUBLIC        ?B_BANK0
+  C:4411H         PUBLIC        ?B_BANK1
+  C:4422H         PUBLIC        ?B_BANK2
+  C:4433H         PUBLIC        ?B_BANK3
+  D:001CH         PUBLIC        ?B_CURRENTBANK
+  N:0000H         PUBLIC        ?B_FACTOR
+  N:0003H         PUBLIC        ?B_MASK
+  N:0004H         PUBLIC        ?B_MODE
+  N:0004H         PUBLIC        ?B_NBANKS
+  N:00FFH         PUBLIC        ?B_RST_BANK
+  C:440AH         PUBLIC        ?B_SWITCH0
+  C:441BH         PUBLIC        ?B_SWITCH1
+  C:442CH         PUBLIC        ?B_SWITCH2
+  C:443DH         PUBLIC        ?B_SWITCH3
+  C:452DH         PUBLIC        _SWITCHBANK
+  N:0000H         SYMBOL        ?BANK?SWITCHING
+  N:0000H         SYMBOL        ?B_FIRSTBIT
+  N:0000H         SYMBOL        ?B_RTX
+  N:0000H         SYMBOL        ?B_VAR_BANKING
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  N:0044H         SYMBOL        B_SWITCH_SIZE
+  C:4400H         SYMBOL        B_SWITCH_START
+  N:0004H         SYMBOL        CNT
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  B:00A8H.7       SYMBOL        EA
+  D:00A8H         SYMBOL        IE
+  N:0003H         SYMBOL        MASK
+  D:00F5H         SYMBOL        PSBANK
+  C:4535H         SYMBOL        SWITCH_TAB
+  C:452EH         SYMBOL        _SWITCHBANK_A
+  -------         ENDMOD        ?BANK?SWITCHING
+
+  -------         MODULE        ?C_STARTUP
+  C:43EDH         SEGMENT       ?C_C51STARTUP
+  I:0022H         SEGMENT       ?STACK
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  06/27/2024  08:37:09  PAGE 3
+
+
+  C:4000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:43F3H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  D:00D9H         SYMBOL        PCA0MD
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:43EDH         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:4000H         LINE#         127
+  C:43EDH         LINE#         133
+  C:43F0H         LINE#         136
+  C:43F2H         LINE#         137
+  C:43F3H         LINE#         138
+  C:43F4H         LINE#         139
+  C:43F6H         LINE#         188
+  C:43F9H         LINE#         199
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        F50X_TARGET_APP_INFOBLOCK
+  C:0000H         SYMBOL        _ICE_DUMMY_
+ C0:7FF0H         PUBLIC        INFOBLOCK
+  -------         ENDMOD        F50X_TARGET_APP_INFOBLOCK
+
+  -------         MODULE        UART
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00A7H         PUBLIC        SFRPAGE
+  D:00A6H         PUBLIC        P2MDOUT
+  D:00D9H         PUBLIC        PCA0MD
+  D:00C7H         PUBLIC        XBR2
+  C:4489H         PUBLIC        main
+  D:0089H         PUBLIC        TMOD
+  D:00D4H         PUBLIC        P0SKIP
+  D:00D5H         PUBLIC        P1SKIP
+  C:450BH         PUBLIC        PORT_Init
+  D:00A1H         PUBLIC        OSCICN
+  D:008DH         PUBLIC        TH1
+  B:0098H.1       PUBLIC        TI1
+  D:008BH         PUBLIC        TL1
+  C:451FH         PUBLIC        SYSCLK_Init
+  B:0088H.6       PUBLIC        TR1
+  D:00EFH         PUBLIC        RSTSRC
+  C:44EAH         PUBLIC        UART1_Init
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  06/27/2024  08:37:09  PAGE 4
+
+
+  D:0098H         PUBLIC        SCON1
+  D:008EH         PUBLIC        CKCON
+  -------         PROC          MAIN
+  -------         DO            
+  D:001DH         SYMBOL        inputcharacter
+  -------         ENDDO         
+  C:4489H         LINE#         61
+  C:4489H         LINE#         62
+  C:4489H         LINE#         65
+  C:448CH         LINE#         67
+  C:448FH         LINE#         68
+  C:4492H         LINE#         69
+  C:4495H         LINE#         70
+  C:4498H         LINE#         72
+  C:449BH         LINE#         74
+  C:449BH         LINE#         75
+  C:449BH         LINE#         76
+  C:44A4H         LINE#         77
+  C:44A9H         LINE#         78
+  C:44B5H         LINE#         79
+  C:44C1H         LINE#         80
+  -------         ENDPROC       MAIN
+  -------         PROC          PORT_INIT
+  -------         DO            
+  D:0007H         SYMBOL        SFRPAGE_save
+  -------         ENDDO         
+  C:450BH         LINE#         111
+  C:450BH         LINE#         112
+  C:450BH         LINE#         113
+  C:450DH         LINE#         114
+  C:4510H         LINE#         116
+  C:4513H         LINE#         117
+  C:4516H         LINE#         118
+  C:4519H         LINE#         120
+  C:451CH         LINE#         122
+  C:451EH         LINE#         123
+  -------         ENDPROC       PORT_INIT
+  -------         PROC          SYSCLK_INIT
+  -------         DO            
+  D:0007H         SYMBOL        SFRPAGE_save
+  -------         ENDDO         
+  C:451FH         LINE#         136
+  C:451FH         LINE#         137
+  C:451FH         LINE#         138
+  C:4521H         LINE#         139
+  C:4524H         LINE#         141
+  C:4527H         LINE#         143
+  C:452AH         LINE#         145
+  C:452CH         LINE#         146
+  -------         ENDPROC       SYSCLK_INIT
+  -------         PROC          UART1_INIT
+  -------         DO            
+  D:0007H         SYMBOL        SFRPAGE_save
+  -------         ENDDO         
+  C:44EAH         LINE#         157
+  C:44EAH         LINE#         158
+  C:44EAH         LINE#         159
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  06/27/2024  08:37:09  PAGE 5
+
+
+  C:44ECH         LINE#         160
+  C:44EFH         LINE#         162
+  C:44F2H         LINE#         167
+  C:44F2H         LINE#         168
+  C:44F2H         LINE#         169
+  C:44F5H         LINE#         170
+  C:44F8H         LINE#         171
+  C:44FBH         LINE#         172
+  C:44FBH         LINE#         173
+  C:44FBH         LINE#         174
+  C:44FBH         LINE#         175
+  C:44FBH         LINE#         176
+  C:44FBH         LINE#         177
+  C:44FBH         LINE#         178
+  C:44FBH         LINE#         179
+  C:44FBH         LINE#         180
+  C:44FBH         LINE#         181
+  C:44FBH         LINE#         182
+  C:44FBH         LINE#         183
+  C:44FBH         LINE#         185
+  C:44FBH         LINE#         186
+  C:44FBH         LINE#         187
+  C:44FBH         LINE#         188
+  C:44FBH         LINE#         189
+  C:44FBH         LINE#         191
+  C:44FEH         LINE#         192
+  C:4501H         LINE#         193
+  C:4504H         LINE#         194
+  C:4506H         LINE#         196
+  C:4508H         LINE#         198
+  C:450AH         LINE#         199
+  -------         ENDPROC       UART1_INIT
+  -------         ENDMOD        UART
+
+  -------         MODULE        PRINTF
+  D:0008H         PUBLIC        ?_PRINTF517?BYTE
+  D:0008H         PUBLIC        ?_PRINTF?BYTE
+  D:0008H         PUBLIC        ?_SPRINTF517?BYTE
+  D:0008H         PUBLIC        ?_SPRINTF?BYTE
+  C:4065H         PUBLIC        _PRINTF
+  C:4065H         PUBLIC        _PRINTF517
+  C:405FH         PUBLIC        _SPRINTF
+  C:405FH         PUBLIC        _SPRINTF517
+  -------         ENDMOD        PRINTF
+
+  -------         MODULE        _GETKEY
+  C:4539H         PUBLIC        _GETKEY
+  -------         ENDMOD        _GETKEY
+
+  -------         MODULE        ?C?CLDPTR
+  C:435FH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CLDOPTR
+  C:4378H         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  06/27/2024  08:37:09  PAGE 6
+
+
+  -------         MODULE        ?C?CSTPTR
+  C:43A5H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?PLDIIDATA
+  C:43B7H         PUBLIC        ?C?PLDIIDATA
+  -------         ENDMOD        ?C?PLDIIDATA
+
+  -------         MODULE        ?C?CCASE
+  C:43C7H         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+  -------         MODULE        PUTCHAR
+  C:44C3H         PUBLIC        _PUTCHAR
+  -------         ENDMOD        PUTCHAR
+
+Program Size: data=32.1 xdata=0 code=1347
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

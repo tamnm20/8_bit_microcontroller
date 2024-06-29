@@ -1,0 +1,180 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              06/29/2024 08:13:09 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\User\main.c LARGE OMF2 OPTIMIZE(8,SPEED) ORDER INCDIR(..\User\Lib\Inc) D
+                    -EBUG PRINT(.\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // F580_Blinky.c
+   3          //-----------------------------------------------------------------------------
+   4          // Copyright (C) 2008 Silicon Laboratories, Inc.
+   5          // http://www.silabs.com
+   6          //
+   7          // Program Description:
+   8          //
+   9          // This program flashes the green LED on the C8051F580 target board about
+  10          // five times a second using the interrupt handler for Timer2.
+  11          //
+  12          //
+  13          // How To Test:
+  14          //
+  15          // 1) Download code to the 'F580 target board
+  16          // 2) Ensure that the P1.3 pins are shorted together on the J19 header
+  17          // 3) Run the program.  If the LED flashes, the program is working
+  18          //
+  19          //
+  20          // Target:         C8051F580 (C8051F580-TB)
+  21          // Tool chain:     Raisonance / Keil / SDCC
+  22          // Command Line:   None
+  23          //
+  24          // Release 1.1 / 11 MAR 2010 (GP)
+  25          //    -Tested with Raisonance
+  26          //
+  27          // Release 1.0 / 21 JUL 2008 (ADT)
+  28          //    - Initial Revision
+  29          //
+  30          //-----------------------------------------------------------------------------
+  31          // Includes
+  32          //-----------------------------------------------------------------------------
+  33          #include "si_toolchain.h"
+  34          #include <compiler_defs.h>             // Compiler declarations
+  35          //#include <C8051F580_defs.h>            // SFR declarations
+  36          #include <C8051F580.h>
+  37          #include "stdint.h"
+  38          
+  39          //-----------------------------------------------------------------------------
+  40          // Global CONSTANTS
+  41          //-----------------------------------------------------------------------------
+  42          #define SYSCLK       24000000        // SYSCLK frequency in Hz
+  43          SBIT(LED, SFR_P1, 3);                 // LED='1' means ON
+  44          SBIT(GREEN, SFR_P2, 1);
+  45          //-----------------------------------------------------------------------------
+  46          // Function PROTOTYPES
+  47          //-----------------------------------------------------------------------------
+  48          uint32_t num = 0;
+  49          void OSCILLATOR_Init (void);
+  50          void PORT_Init (void);
+  51          void TIMER2_Init (uint16_t counts);
+  52          void delayms(int time);
+  53          void delay(int time);
+  54          //-----------------------------------------------------------------------------
+C51 COMPILER V9.60.7.0   MAIN                                                              06/29/2024 08:13:09 PAGE 2   
+
+  55          // MAIN Routine
+  56          //-----------------------------------------------------------------------------
+  57          void main (void)
+  58          {
+  59   1         SFRPAGE = ACTIVE_PAGE;
+  60   1      
+  61   1         PCA0MD &= ~0x40;                    // Disable the watchdog timer
+  62   1      
+  63   1         OSCILLATOR_Init();                 // Configure system clock
+  64   1         PORT_Init ();                       // Initialize crossbar
+  65   1         //TIMER2_Init (SYSCLK / 12 / 1000);     // Init Timer2 to generate interrupts
+  66   1      
+  67   1         EA = 1;                             // Enable global interrupts
+  68   1      
+  69   1         while (1)
+  70   1         {
+  71   2            GREEN = !GREEN;
+  72   2            //_nop_();
+  73   2            //delayms(1000);
+  74   2            delay(1000);  
+  75   2         }                          // Spin forever
+  76   1      }
+  77          
+  78          void OSCILLATOR_Init (void)
+  79          {
+  80   1         uint8_t SFRPAGE_save = SFRPAGE;
+  81   1         SFRPAGE = CONFIG_PAGE;
+  82   1      
+  83   1         OSCICN = 0x87;
+  84   1      
+  85   1         SFRPAGE = SFRPAGE_save;
+  86   1      }
+  87          
+  88          
+  89          void PORT_Init (void)
+  90          {
+  91   1         uint8_t SFRPAGE_save = SFRPAGE;
+  92   1         SFRPAGE = CONFIG_PAGE;
+  93   1      
+  94   1         P1MDOUT |= 0x08;                    // Enable LED as a push-pull output
+  95   1         P1SKIP  |= 0x08;                    // Skip the LED pin on the crossbar
+  96   1      
+  97   1         P2MDOUT |= 0x07;                    
+  98   1         P2SKIP  |= 0x07;                   
+  99   1      
+ 100   1      
+ 101   1         XBR2     = 0x40;                    // Enable crossbar and weak pull-ups
+ 102   1      
+ 103   1         SFRPAGE = SFRPAGE_save;
+ 104   1      }
+ 105          
+ 106          
+ 107          void TIMER2_Init (uint16_t counts)
+ 108          {
+ 109   1         uint8_t SFRPAGE_save = SFRPAGE;
+ 110   1         SFRPAGE = ACTIVE_PAGE;
+ 111   1      
+ 112   1         TMR2CN  = 0x00;                     // Stop Timer2; Clear TF2;
+ 113   1                                             // use SYSCLK/12 as timebase
+ 114   1         CKCON  &= ~0x60;                    // Timer2 clocked based on T2XCLK;
+ 115   1      
+ 116   1         TMR2RL  = -counts;                  // Init reload values
+C51 COMPILER V9.60.7.0   MAIN                                                              06/29/2024 08:13:09 PAGE 3   
+
+ 117   1         TMR2    = 0xFFFF;                   // Set to reload immediately
+ 118   1         ET2     = 1;                        // Enable Timer2 interrupts
+ 119   1         TR2     = 1;                        // Start Timer2
+ 120   1      
+ 121   1         SFRPAGE = SFRPAGE_save;
+ 122   1      }
+ 123          
+ 124          INTERRUPT(Timer2_ISR, INTERRUPT_TIMER2)
+ 125          {
+ 126   1         TF2H = 0;                           // Clear Timer2 interrupt flag
+ 127   1         num++;
+ 128   1      }
+ 129          //void Timer2_ISR(void)
+ 130          //{
+ 131          //   TF2H = 0;                           // Clear Timer2 interrupt flag
+ 132          //   num++; 
+ 133          //}
+ 134          void delayms(int time)
+ 135          {
+ 136   1         //volatile int tmp = num;
+ 137   1         num = 0;
+ 138   1         while(num < time);
+ 139   1      }
+ 140          void delay(int time)
+ 141          {
+ 142   1        volatile int i,j;
+ 143   1        for(i=0;i<time;i++){
+ 144   2          for(j=0;j<3390;j++){
+ 145   3            _nop_();
+ 146   3          }
+ 147   2        }
+ 148   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    303    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      4       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

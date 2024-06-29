@@ -1,0 +1,233 @@
+C51 COMPILER V9.60.7.0   UART                                                              06/27/2024 08:37:09 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN uart.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.exe uart.c DB OE BR INTVECTOR(0X4000) INCDIR(C:\SiLabs\MCU\Inc)
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // F580_UART1_STDIO.c
+   3          //-----------------------------------------------------------------------------
+   4          // Copyright 2008 Silicon Laboratories, Inc.
+   5          // http://www.silabs.com
+   6          //
+   7          // Program Description:
+   8          //
+   9          // This program demonstrates how to configure the C8051F580 to use routines
+  10          // in STDIO.h to write to and read from the UART interface.  The program
+  11          // reads a character using the STDIO routine getkey(), outputs that character
+  12          // to the screen, and then outputs the ASCII hex value of that character.
+  13          //
+  14          //
+  15          // How To Test:
+  16          //
+  17          // 1) Ensure that jumpers are placed on J? of the C8051F580 target board
+  18          //    that connect P0.4 to the TX signal, and P0.5 to the RX field.
+  19          // 2) Connect USB cable from the development board to a PC
+  20          // 3) Specify the target baudrate in the constant <BAUDRATE>.
+  21          // 4) Open Hyperterminal, or a similar program, and connect to the target
+  22          //    board's USB port (virtual com port).
+  23          // 5) Download and execute code to an 'F580 target board.
+  24          //
+  25          //
+  26          // Target:         C8051F580
+  27          // Tool chain:     Keil C51 8.0 / Keil EVAL C51
+  28          // Command Line:   None
+  29          //
+  30          // Release 1.0 / 21 JUL 2008 (ADT)
+  31          //    - Initial Revision
+  32          //
+  33          //-----------------------------------------------------------------------------
+  34          // Includes
+  35          //-----------------------------------------------------------------------------
+  36          
+  37          #include <compiler_defs.h>
+  38          #include <C8051F580_defs.h>            // SFR declarations
+  39          #include <stdio.h>
+  40          
+  41          //-----------------------------------------------------------------------------
+  42          // Global CONSTANTS
+  43          //-----------------------------------------------------------------------------
+  44          
+  45          #define SYSCLK      24000000           // SYSCLK frequency in Hz
+  46          #define BAUDRATE      115200           // Baud rate of UART in bps
+  47          
+  48          //-----------------------------------------------------------------------------
+  49          // Function PROTOTYPES
+  50          //-----------------------------------------------------------------------------
+  51          
+  52          void SYSCLK_Init (void);
+  53          void UART1_Init (void);
+  54          void PORT_Init (void);
+  55          void Timer2_Init (int);
+C51 COMPILER V9.60.7.0   UART                                                              06/27/2024 08:37:09 PAGE 2   
+
+  56          
+  57          //-----------------------------------------------------------------------------
+  58          // MAIN Routine
+  59          //-----------------------------------------------------------------------------
+  60          
+  61          void main (void)
+  62          {
+  63   1         U8 inputcharacter;                  // Used to store character from UART
+  64   1      
+  65   1         SFRPAGE = ACTIVE_PAGE;
+  66   1      
+  67   1         PCA0MD &= ~0x40;                    // Disable watchdog timer
+  68   1         PORT_Init();                        // Initialize Port I/O
+  69   1         SYSCLK_Init ();                     // Initialize Oscillator
+  70   1         UART1_Init();
+  71   1      
+  72   1         SFRPAGE = ACTIVE2_PAGE;             // Switch page for UART1 communication
+  73   1      
+  74   1         while (1)
+  75   1         {
+  76   2            printf ("\nEnter character: ");
+  77   2            inputcharacter = getkey ();
+  78   2            printf ("\nCharacter entered : %c",inputcharacter);
+  79   2            printf ("\n      Value in Hex: %bx",inputcharacter);
+  80   2         }
+  81   1      }
+  82          
+  83          //-----------------------------------------------------------------------------
+  84          // Initialization Subroutines
+  85          //-----------------------------------------------------------------------------
+  86          //-----------------------------------------------------------------------------
+  87          // PORT_Init
+  88          //-----------------------------------------------------------------------------
+  89          //
+  90          // Return Value : None
+  91          // Parameters   : None
+  92          //
+  93          // Configure the Crossbar and GPIO ports.
+  94          //
+  95          // P0.4   digital   push-pull    UART1 TX
+  96          // P0.5   digital   open-drain   UART1 RX
+  97          //
+  98          //-----------------------------------------------------------------------------
+  99          // void PORT_Init (void)
+ 100          // {
+ 101             // U8 SFRPAGE_save = SFRPAGE;
+ 102             // SFRPAGE = CONFIG_PAGE;
+ 103          
+ 104             // P0MDOUT |= 0x10;                    // Enable UART1 TX as push-pull output
+ 105             // P0SKIP  = 0x0F;                     // Skip to P0.4
+ 106          
+ 107             // XBR2    = 0x42;                     // Enable UART1 on P0.4(TX) and P0.5(RX)
+ 108                                                 // // Enable crossbar and weak pull-ups
+ 109             // SFRPAGE = SFRPAGE_save;
+ 110          // }
+ 111          void PORT_Init (void)
+ 112          {
+ 113   1         U8 SFRPAGE_save = SFRPAGE;
+ 114   1         SFRPAGE = CONFIG_PAGE;
+ 115   1      
+ 116   1         P2MDOUT |= 0x01;                    // Enable UART1 TX as push-pull output
+ 117   1         P0SKIP    = 0xFF;
+C51 COMPILER V9.60.7.0   UART                                                              06/27/2024 08:37:09 PAGE 3   
+
+ 118   1         P1SKIP    = 0xFF;                     // Skip to P0.4
+ 119   1      
+ 120   1         XBR2    = 0x42;                     // Enable UART1 on P2.0(TX) and P2.1(RX)
+ 121   1                                             // Enable crossbar and weak pull-ups
+ 122   1         SFRPAGE = SFRPAGE_save;
+ 123   1      }
+ 124          //-----------------------------------------------------------------------------
+ 125          // SYSCLK_Init
+ 126          //-----------------------------------------------------------------------------
+ 127          //
+ 128          // Return Value : None
+ 129          // Parameters   : None
+ 130          //
+ 131          // This routine initializes the system clock to use the internal oscillator
+ 132          // at its maximum frequency.
+ 133          // Also enables the Missing Clock Detector.
+ 134          //-----------------------------------------------------------------------------
+ 135          
+ 136          void SYSCLK_Init (void)
+ 137          {
+ 138   1         U8 SFRPAGE_save = SFRPAGE;
+ 139   1         SFRPAGE = CONFIG_PAGE;
+ 140   1      
+ 141   1         OSCICN |= 0x87;                     // Configure internal oscillator for
+ 142   1                                             // its maximum frequency
+ 143   1         RSTSRC  = 0x04;                     // Enable missing clock detector
+ 144   1      
+ 145   1         SFRPAGE = SFRPAGE_save;
+ 146   1      }
+ 147          
+ 148          //-----------------------------------------------------------------------------
+ 149          // UART1_Init
+ 150          //-----------------------------------------------------------------------------
+ 151          //
+ 152          // Return Value : None
+ 153          // Parameters   : None
+ 154          //
+ 155          // Configure the UART1 using Timer1, for <BAUDRATE> and 8-N-1.
+ 156          //-----------------------------------------------------------------------------
+ 157          void UART1_Init (void)
+ 158          {
+ 159   1         U8 SFRPAGE_save = SFRPAGE;
+ 160   1         SFRPAGE = ACTIVE2_PAGE;
+ 161   1      
+ 162   1         SCON1 = 0x10;                       // SCON1: 8-bit variable bit rate
+ 163   1                                             //        level of STOP bit is ignored
+ 164   1                                             //        RX enabled
+ 165   1                                             //        ninth bits are zeros
+ 166   1                                             //        clear RI0 and TI0 bits
+ 167   1         if (SYSCLK / BAUDRATE / 2 / 256 < 1) 
+ 168   1         {
+ 169   2            TH1 = -(SYSCLK / BAUDRATE / 2);
+ 170   2            CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+ 171   2            CKCON |=  0x08;
+ 172   2         } 
+ 173   1         else if (SYSCLK / BAUDRATE / 2 / 256 < 4) 
+ 174   1         {
+ 175   2            TH1 = -(SYSCLK / BAUDRATE / 2 / 4);
+ 176   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 01
+ 177   2            CKCON |=  0x01;
+ 178   2         } 
+ 179   1         else if (SYSCLK / BAUDRATE / 2 / 256 < 12) 
+C51 COMPILER V9.60.7.0   UART                                                              06/27/2024 08:37:09 PAGE 4   
+
+ 180   1         {
+ 181   2            TH1 = -(SYSCLK / BAUDRATE / 2 / 12);
+ 182   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 00
+ 183   2         } 
+ 184   1         else 
+ 185   1         {
+ 186   2            TH1 = -(SYSCLK / BAUDRATE / 2 / 48);
+ 187   2            CKCON &= ~0x0B;                  // T1M = 0; SCA1:0 = 10
+ 188   2            CKCON |=  0x02;
+ 189   2         }
+ 190   1      
+ 191   1         TL1 = TH1;                          // Init Timer1
+ 192   1         TMOD &= ~0xF0;                      // TMOD: timer 1 in 8-bit autoreload
+ 193   1         TMOD |=  0x20;
+ 194   1         TR1 = 1;                            // START Timer1
+ 195   1      
+ 196   1         TI1 = 1;                            // Indicate TX0 ready (SCON1)
+ 197   1      
+ 198   1         SFRPAGE = SFRPAGE_save;
+ 199   1      }
+ 200          
+ 201          //-----------------------------------------------------------------------------
+ 202          // End Of File
+ 203          //-----------------------------------------------------------------------------
+*** WARNING C294 IN LINE 175 OF uart.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    125    ----
+   CONSTANT SIZE    =     68    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

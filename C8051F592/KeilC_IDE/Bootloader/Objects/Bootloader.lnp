@@ -1,0 +1,5 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj" 
+TO ".\Objects\Bootloader" 
+
+PRINT(".\Listings\Bootloader.map")

@@ -1,0 +1,194 @@
+C51 COMPILER V9.51   MAIN                                                                  12/28/2023 16:19:56 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.exe main.c DB OE BR INTVECTOR(0X4000) INCDIR(c:\SiLabs\MCU\Inc)
+
+line level    source
+
+   1          #include "compiler_defs.h"
+   2          #include "C8051F580_defs.h"
+   3          #include "Global_Define.h"
+   4          #include "mgr_mcu.h"
+   5          #include "drv_mcu.h"
+   6          #include "drv_timer.h"
+   7          #include "drv_i2c.h"
+   8          
+   9          #define  INIT                           0x00U           // (MR) data byte received
+  10          #define  RX                                     0x01U           // (MR) data byte received
+  11          #define  TX                                     0x02U           // (MR) data byte received
+  12          #define         CMD_REGISTER_ADDR                       (0x0040U)
+  13          #define SENSOR_INIT                                             0x01U
+  14          #define SENSOR_RUNNING                                  0x02U
+  15          #define SENSOR_STATE_STREAMING                  0x3100U
+  16          
+  17          INTERRUPT_PROTO (TIMER2_ISR, INTERRUPT_TIMER2);
+  18          
+  19          extern SEG_XDATA tMsg_Global_Tick       g_Global_Tick_Msg;
+  20          extern SEG_XDATA tMsg_Time_s            ga_tCAN_Time_Msg[TID_COUNT];
+  21          
+  22          typedef struct {
+  23                  U8  Slave;
+  24                  U8  Length;
+  25                  U8  TRX_Flag;
+  26                  U16 Addr;
+  27                  U16 TxData;
+  28                  U16 RxData;
+  29          }tMsg_I2C_Tx_Data_s;
+  30          
+  31          static SEG_XDATA tMsg_I2C_Tx_Data_s tI2C_Tx_Msg;
+  32          
+  33          void Comm_I2C_Tx(U8 Slave_Addr,U8 Length,U16 Addr, U16 TData,U16 RData )
+  34          {
+  35   1              tI2C_Tx_Msg.Slave               = Slave_Addr;
+  36   1              tI2C_Tx_Msg.Length              = Length;
+  37   1              tI2C_Tx_Msg.Addr                = Addr;
+  38   1              tI2C_Tx_Msg.TxData              = TData;
+  39   1              tI2C_Tx_Msg.RxData              = RData;
+  40   1              tI2C_Tx_Msg.TRX_Flag    = TX;
+  41   1              
+  42   1              i2c_master_write(tI2C_Tx_Msg.Slave,tI2C_Tx_Msg.Addr,tI2C_Tx_Msg.TxData,tI2C_Tx_Msg.Length);
+  43   1              //Comm_I2C_Tx_Data();
+  44   1      }
+  45          
+  46          U16 Comm_I2C_Rx(U8 Slave_Addr,U8 Length,U16 Addr, U16 TData,U16 RData )
+  47          {
+  48   1              SEG_XDATA U16 ret = 0x0000U;
+  49   1      
+  50   1              tI2C_Tx_Msg.Slave               = Slave_Addr;
+  51   1              tI2C_Tx_Msg.Length              = Length;
+  52   1              tI2C_Tx_Msg.Addr                = Addr;
+  53   1              tI2C_Tx_Msg.TxData              = TData;
+  54   1              tI2C_Tx_Msg.RxData              = RData;
+  55   1              tI2C_Tx_Msg.TRX_Flag    = RX;
+C51 COMPILER V9.51   MAIN                                                                  12/28/2023 16:19:56 PAGE 2   
+
+  56   1              
+  57   1              tI2C_Tx_Msg.RxData = i2c_master_read(tI2C_Tx_Msg.Slave,tI2C_Tx_Msg.Addr,tI2C_Tx_Msg.Length);
+  58   1              //Comm_I2C_Tx_Data();
+  59   1              ret = tI2C_Tx_Msg.RxData;
+  60   1      
+  61   1              return ret;             
+  62   1      }
+  63          
+  64          U8 Check_Isp_InitState(void)
+  65          {
+  66   1              SEG_XDATA U16 chk_data = 0x00U;
+  67   1              SEG_XDATA U8 ret = 0x00U;
+  68   1              chk_data = Comm_I2C_Rx(ISP_SLAVE_ADDRESS,I2C_2BYTE_RW,(U16)CMD_REGISTER_ADDR,(U16)0x00,(U16)0x00);
+  69   1              if(chk_data == SENSOR_STATE_STREAMING)//chk_data == 0x3100U
+  70   1              {
+  71   2                      ret = TRUE;
+  72   2              }
+  73   1              else
+  74   1              {
+  75   2                      ret = FALSE;
+  76   2              }
+  77   1              return ret;
+  78   1      }
+  79          
+  80          U8 mtam[]  = "OKAY";
+  81          U8 mtam2[] = "OFF";
+  82          U8 tam_check =0;
+  83          
+  84          int main() {
+  85   1              SEG_XDATA U8 On_Time = 0x00U;
+  86   1              
+  87   1              Init_McuTask();
+  88   1              SMBUS0_Init();                                  // Configure and enable SMBus
+  89   1              Delay_Time_Set(TID_BLINK_TIMER, DT_BLINK_TIMER);
+  90   1              
+  91   1              // lcd_init();
+  92   1              // lcd_goto_XY(1, 0);
+  93   1              // lcd_send_string("     MCNEX Vina     ");
+  94   1              // Wait_ms(10);
+  95   1              // lcd_goto_XY(2, 0);
+  96   1              // lcd_send_string(" HAPPY NEW YEAR 2024");
+  97   1              // Wait_ms(10);
+  98   1              // lcd_goto_XY(3, 0);
+  99   1              // lcd_send_string("         Ninh Binh  ");
+ 100   1              // Wait_ms(10);
+ 101   1              // lcd_goto_XY(4, 0);
+ 102   1              // lcd_send_string("         01/01/2024 ");
+ 103   1              Wait_ms(200);
+ 104   1              
+ 105   1              while(1) {
+ 106   2                      tam_check = Check_Isp_InitState();
+ 107   2                      if(tam_check){
+ 108   3                              i2c_master_write_tam(ISP_SLAVE_ADDRESS, &mtam,  sizeof(mtam)-1);
+ 109   3                      }
+ 110   2                      else{
+ 111   3                              i2c_master_write_tam(ISP_SLAVE_ADDRESS, &mtam2, sizeof(mtam2)-1);
+ 112   3                      }
+ 113   2                      Wait_ms(10);
+ 114   2                      // On_Time = Delay_Time_Get(TID_BLINK_TIMER);
+ 115   2                      // if(On_Time == TRUE) {
+ 116   2                              // if(tam_check){
+ 117   2                                      // i2c_master_write_tam(ISP_SLAVE_ADDRESS, &mtam, 4);
+C51 COMPILER V9.51   MAIN                                                                  12/28/2023 16:19:56 PAGE 3   
+
+ 118   2                              // }
+ 119   2                              // else{
+ 120   2                                      // i2c_master_write_tam(ISP_SLAVE_ADDRESS, &mtam2, 1);
+ 121   2                              // }
+ 122   2                      // }
+ 123   2              }
+ 124   1      
+ 125   1              return 0;
+ 126   1      }
+ 127          
+ 128          INTERRUPT(TIMER2_ISR, INTERRUPT_TIMER2)
+ 129          {
+ 130   1              SEG_XDATA U8 i = 0x00U;
+ 131   1              TF2H = 0x00U;
+ 132   1      
+ 133   1              g_Global_Tick_Msg.Tick_1ms++;
+ 134   1      
+ 135   1              if ( g_Global_Tick_Msg.Over_Set == FALSE)
+ 136   1              {
+ 137   2                      if ( g_Global_Tick_Msg.Tick_1ms >= 0xFFFFU )
+ 138   2                      {
+ 139   3                              if ( g_Global_Tick_Msg.Tick_1ms >= g_Global_Tick_Msg.Limit )
+ 140   3                              {
+ 141   4                                      g_Global_Tick_Msg.Tick_1ms = (U32)0;
+ 142   4                                      for ( i = (U8)0; i <= TID_COUNT; i++)
+ 143   4                                      {
+ 144   5                                              ga_tCAN_Time_Msg[i].End_Time = (U32)0;
+ 145   5                                      }                               
+ 146   4                              }
+ 147   3                              else
+ 148   3                              {
+ 149   4                                      g_Global_Tick_Msg.Over_Set = TRUE;
+ 150   4                                      g_Global_Tick_Msg.Limit = (volatile U32)(g_Global_Tick_Msg.Limit - 0xFFFFU);
+ 151   4                              }
+ 152   3                      }
+ 153   2              }
+ 154   1              else
+ 155   1              {
+ 156   2                      g_Global_Tick_Msg.Limit--;
+ 157   2                      if ( g_Global_Tick_Msg.Limit <= (U8)0 )
+ 158   2                      {
+ 159   3                              g_Global_Tick_Msg.Tick_1ms = (U16)0;
+ 160   3                              g_Global_Tick_Msg.Over_Set = FALSE;
+ 161   3                              for ( i = 0; i <= TID_COUNT; i++)
+ 162   3                              {
+ 163   4                                      ga_tCAN_Time_Msg[i].End_Time -= ga_tCAN_Time_Msg[i].Cur_Time;
+ 164   4                              }
+ 165   3                      }
+ 166   2              }
+ 167   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    705    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      9       7
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     10      16
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

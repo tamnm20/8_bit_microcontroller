@@ -1,0 +1,14 @@
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0 - SN: K1FSC-U07XFZ
+COPYRIGHT (C) 1987-2021, Arm Limited or its Affiliates. All rights reserved.
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\STARTUP.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\main.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\F50x_Target_App_InfoBlock.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\L51_BANK.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\mgr_mcu.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\drv_mcu.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\drv_timer.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\drv_i2c.obj"  TO "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\SMBus\blinked" NOOL CODE(0x4000-0x7FFF) BANK0(?CO?F50x_Target_App_InfoBlock(0x7FF0))  BANKAREA(8000H,0FFFFH) 
+
+Program Size: data=67.0 xdata=87 code=3177
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,182 @@
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0 - SN: K1FSC-U07XFZ
+COPYRIGHT (C) 1987-2021, Arm Limited or its Affiliates. All rights reserved.
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\Startup_WatchdogDisable.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\L51_BANK.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\INIT.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\main.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_mcu.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_mcu.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_timer.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_comm.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_diag.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_mem.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_spi.obj"  TO "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\SteeringCamera_App.omf" NOOL CODE(0x200-0x3FFF) BANKAREA(8000H,0FFFFH) 
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _DESCSETSTATESESSION
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_comm.obj (MGR_COMM)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _DESCSETSTATESECURITYACCESS
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_comm.obj (MGR_COMM)
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _DESCSETSTATESESSION
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_comm.obj (MGR_COMM)
+    ADDRESS: 1A70H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _DESCSETSTATESESSION
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_comm.obj (MGR_COMM)
+    ADDRESS: 1A7FH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _DESCSETSTATESECURITYACCESS
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_comm.obj (MGR_COMM)
+    ADDRESS: 1A8EH
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  CANINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  TPINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  TPTXTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  TPRXTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  NMBASICINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  NMBASICTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  NMBASICSTART
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  _DESCINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  DESCTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ILINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ILRXSTART
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ILRXTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  ILTXTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  NMBASICINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1DD7H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  CANINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1DDAH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ILINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1DDDH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  TPINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1DE0H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  _DESCINITPOWERON
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1DE5H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ILRXSTART
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1E9EH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  NMBASICSTART
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1EA1H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ILRXTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1E17H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  ILTXTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1E1AH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  TPRXTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1E1DH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  DESCTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1E20H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  TPTXTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1E23H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  NMBASICTASK
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj (DRV_CAN)
+    ADDRESS: 1E26H
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  EEPROM_UPDATE_MODE
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_diag.obj (MGR_DIAG)
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EEPROM_UPDATE_MODE
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_diag.obj (MGR_DIAG)
+    ADDRESS: 16EAH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EEPROM_UPDATE_MODE
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_diag.obj (MGR_DIAG)
+    ADDRESS: 1C0AH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EEPROM_UPDATE_MODE
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_diag.obj (MGR_DIAG)
+    ADDRESS: 1C38H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EEPROM_UPDATE_MODE
+    MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_diag.obj (MGR_DIAG)
+    ADDRESS: 0222H
+
+Program Size: data=16.4 xdata=1973 code=7555
+LINK/LOCATE RUN COMPLETE.  36 WARNING(S),  0 ERROR(S)

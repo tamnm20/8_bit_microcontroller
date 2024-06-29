@@ -1,0 +1,12 @@
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\Startup_WatchdogDisable.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\L51_BANK.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\INIT.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\main.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_mcu.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_mcu.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_timer.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_comm.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_can.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\mgr_diag.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_mem.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\drv_spi.obj"  TO "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\MyBootloader\SteeringCamera_App.omf" NOOL CODE(0x200-0x3FFF) BANKAREA(8000H,0FFFFH) 

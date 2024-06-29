@@ -1,0 +1,1 @@
+"..\driver\src\GPIO.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(..\driver\inc) DEBUG PRINT(.\Listings\GPIO.lst) TABS (2) OBJECT(.\Objects\GPIO.obj)

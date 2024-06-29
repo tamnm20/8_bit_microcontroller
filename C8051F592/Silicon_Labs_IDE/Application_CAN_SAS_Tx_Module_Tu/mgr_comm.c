@@ -1,0 +1,321 @@
+/*_____ I N C L U D E __________________________________________*/
+#include "compiler_defs.h"
+#include "C8051F580_defs.h"
+#include "Global_Define.h"
+#include "drv_timer.h"
+#include "drv_can.h"
+#include "drv_spi.h"
+#include "drv_mcu.h"
+#include "drv_mem.h"
+#include "mgr_comm.h"
+#include "desc.h"
+#include "nm_basic.h"
+#include "il_inc.h"
+#include "string.h"
+/*--------------------------------------------------------------*/
+/*
+U8 TGT_Response;
+U8 SRC_Response;
+
+extern SEG_XDATA U8 CAN_Rx_Complete_Flag = 0x00U; 
+
+U32 Pages_Written = 0;
+
+U32 Page_Addr;
+U16 SRC_Page_CRC;
+U16 TGT_Page_CRC;
+SEG_XDATA volatile U8 Timeout = 0x00U;
+
+U8 Last_Error = 0x01U;
+U8 download_type;
+U16 Temp_Counter;
+
+static SEG_XDATA U16 SAS_Tx_Data = 0x0650U;
+static SEG_XDATA U8 Cur_Sign = 0U;
+static SEG_XDATA U8 Pre_Sign = 0U;
+static SEG_XDATA U8 Sel_Tx_Mode = 2U;
+static SEG_XDATA U8 Sel_Tx_Mode_Pre = 2U;
+
+static SEG_XDATA U8 LANG_Tx_Data = 0x00U;
+
+SEGMENT_VARIABLE (Page_Buf[256], U8, SEG_XDATA);
+SEGMENT_VARIABLE (TGT_Info[TGT_Enum_End_Value], U8, SEG_XDATA);
+SEGMENT_VARIABLE (SRC_Info[SRC_Enum_End_Value], U8, SEG_XDATA);
+SEGMENT_VARIABLE (PCP_Info[2], U8, SEG_XDATA);
+extern SEGMENT_VARIABLE (CAN_Rx_Buf[8], U8, SEG_XDATA);
+extern SEGMENT_VARIABLE (CAN_Tx_Buf[8], U8, SEG_XDATA);
+extern SEG_DATA U8 Transfer_Mode; 
+*/
+
+// -------------------------------------- DATABASE--------------------------------------
+U8 ADD_F[8] 		= {0x04,0x2E,0xB0,0x06,0x01,0x00,0x00,0x00};	// add fp
+U8 SCAN_F[8] 		= {0x04,0x2E,0xB0,0x06,0x02,0x00,0x00,0x00};	// scan fp
+U8 DEL_F[8] 		= {0x04,0x2E,0xB0,0x06,0x03,0x00,0x00,0x00};	// delete fp
+
+U8 Ex[8] 			= {0x02,0x10,0x03,0x00,0x00,0x00,0x00,0x00};	//extended session
+U8 IOCBI[8] 		= {0x04,0x2F,0xF0,0x53,0x03,0x00,0x00,0x00};	//IOCBI enroll coverage
+U8 FPM_Enroll[8] 	= {0x03,0x22,0xB0,0x0C,0x00,0x00,0x00,0x00}; 	// fpm enroll
+U8 Flow[8] 			= {0x30,0x00,0x7F,0x00,0x00,0x00,0x00,0x00};	// flow control
+// --- Sensor touch check database
+U8 STC1[8]			= {0x02,0x10,0x03,0x55,0x55,0x55,0x55,0x55};
+U8 STC2[8]			= {0x04,0x2F,0xF0,0x51,0x03,0x00,0x00,0x00};
+U8 STC3[8]			= {0x03,0x22,0xB0,0x0D,0x55,0x55,0x55,0x55};
+U8 STC4[8]			= {0x30,0x00,0x7F,0x55,0x55,0x55,0x55,0x55};
+
+U8 RDBI[8]			= {0x03,0x22,0xB0,0x0B,0x00,0x00,0x00,0x00};
+U8 ExS[8]			= {0x30,0x00,0x7F,0x00,0x00,0x00,0x00,0x00};
+
+U8 LED_Red[8]		= {0xFF,0x00,0x00,0x10,0x00,0x00,0x00,0x00};
+U8 LED_Gre[8]		= {0x00,0xFE,0x01,0x10,0x00,0x00,0x00,0x00};
+U8 LED_Blu[8]		= {0x00,0x00,0xFC,0x13,0x00,0x00,0x00,0x00};
+U8 LED_Whi[8]		= {0xFF,0xFE,0xFD,0x13,0x00,0x00,0x00,0x00};
+U8 LED_Off[8]		= {0x00,0x00,0x00,0x08,0x00,0x00,0x00,0x00};
+
+U8 Manu_Data_1[8]	= {0x10,0x10,0x2E,0xB0,0x08,0x32,0x30,0x32};
+U8 Manu_Data_2[8]	= {0x21,0x33,0x30,0x33,0x33,0x31,0x30,0x30};
+U8 Manu_Data_3[8]	= {0x22,0x30,0x30,0x30,0xAA,0xAA,0xAA,0xAA};
+
+U8 Manu_Infor[8]	= {0x03,0x22,0xF1,0x8B,0x00,0x00,0x00,0x00};
+U8 ECU_Seri_Num[8]	= {0x03,0x22,0xF1,0x8C,0x00,0x00,0x00,0x00};
+U8 Sup_HW_Ver[8]	= {0x03,0x22,0xF1,0x93,0x00,0x00,0x00,0x00};
+U8 Vih_SW_Ver[8]	= {0x03,0x22,0xF1,0xA0,0x00,0x00,0x00,0x00};
+U8 Suply_code[8]	= {0x03,0x22,0xF1,0xA1,0x00,0x00,0x00,0x00};
+U8 SW_Unit_Num[8]	= {0x03,0x22,0xF1,0xB0,0x00,0x00,0x00,0x00};
+U8 SW_Unit_Ver[8]	= {0x03,0x22,0xF1,0xB1,0x00,0x00,0x00,0x00};
+U8 Part_num[8]		= {0x03,0x22,0xF1,0x87,0x00,0x00,0x00,0x00};
+U8 HSM_Lock_check[8]= {0x04,0x2E,0xB0,0x06,0x00,0x00,0x00,0x00};
+
+//-------------------------------------- my variable-------------------------------------
+U8 SW = 0xff; // 4 Switch
+extern U8 Pre_print;
+U8 State_machine = 0x00;
+extern U32 Pre_time;
+extern U8 ECU_info_flag;
+
+void Init_CommTask(void)
+{	
+	SEG_XDATA U8 i;
+	Spi_Init();
+	Can_Init();
+}
+
+void Operate_CommTask(void)
+{
+    U16 index,cnt,send_cnt = 0;
+    SEG_XDATA U32 last_addr_cnt = 0x00U;
+	U8  mode = 0x00;
+	SEG_XDATA  U8 Read_Buf[4] = {0x00U,0x00U,0x00U,0x00U};
+	static SEG_XDATA  U32 address = 0x00U;
+	SEG_XDATA volatile U16 Pre_Time = 0;
+	SEG_XDATA volatile U16 Cur_Time = 0;
+	SEG_XDATA U16 push_count = 0x0000U;
+	SEG_XDATA volatile U8 Tx_Buf[2] = {0x00U, 0x00U};
+	SEG_XDATA volatile U8 On_Time;
+	SEG_XDATA volatile U8 HISTERY = 0;
+	
+	while(1) // Spin forever in this outer loop
+	{
+		if(SW2_UPDATE_START == 0x00U)
+		{
+			while(SW2_UPDATE_START == 0x00U);
+			LED_STATUS_ERROR = 0x00u;
+			LED_STATUS_UPDOWNLOAD = 0x00u;
+			SW = (P1 >> 3) &0x0F;
+						
+			State_machine = 0x00;
+			
+		}
+
+		switch(SW)
+		{
+			case 0x00:
+				// test sleep function
+				
+/*				if(State_machine == 0x00)
+				{
+					SEND_GST(SCAN_F);
+					State_machine = 0x01;
+				}
+*/
+			break;
+			case 0x01: // Resistration Check Driver FP1
+				if(State_machine == 0x00)
+				{
+					Pre_print = 0;
+					SEND_GST(ADD_F);
+					State_machine++;
+				}
+				else if(State_machine == 0x02)
+				{
+					Wait_ms(1500);
+					SEND_GST(Ex);
+					Wait_ms(200);
+					SEND_GST(IOCBI);
+					Wait_ms(200);
+					SEND_GST(FPM_Enroll);
+					State_machine = 0x03;
+				}
+				else if(State_machine == 0x04)
+				{
+					SEND_GST(Flow);
+					State_machine = 0x05;
+				}
+				
+			break;
+			case 0x02:  //FP recognition Check
+				if(State_machine == 0x00)
+				{
+					SEND_GST(SCAN_F);
+					State_machine = 0x01;
+					Pre_time = Get_Time();
+				}
+
+			break;
+			
+			case 0x03: // sensor touch check
+				if(State_machine == 0x00)
+				{
+					SEND_GST(STC1);
+					Wait_ms(200);
+					SEND_GST(STC2);
+					Wait_ms(200);
+					State_machine = 0x01;	
+				}
+				if(State_machine == 0x02)
+				{
+					SEND_GST(STC3);
+					Wait_ms(100);
+					SEND_GST(STC4);
+					State_machine = 0x03;	
+				}
+			break;
+			
+			case 0x04: // Self Diganosetic test
+				if(State_machine == 0x00)
+				{
+					SEND_GST(RDBI);
+					Wait_ms(100);
+					SEND_GST(ExS);
+					State_machine = 0x01;	
+				}
+			break;
+			
+			case 0x05: // Led test
+				if(State_machine == 0x00)
+				{
+					SEND_LED(LED_Red);
+					Wait_ms(1000);
+					SEND_LED(LED_Gre);
+					Wait_ms(1000);
+					SEND_LED(LED_Blu);
+					Wait_ms(1000);
+					SEND_LED(LED_Whi);
+					Wait_ms(1000);
+					SEND_LED(LED_Off);
+					State_machine = 0x01;	
+				}	
+			break;
+			
+			case 0x06: // Information test
+				if(State_machine == 0x00)
+				{
+					SEND_GST(Manu_Data_1);
+					Wait_ms(100);
+					SEND_GST(Manu_Data_2);
+					Wait_ms(100);
+					SEND_GST(Manu_Data_3);
+					Wait_ms(500);
+
+					SEND_GST(Manu_Infor);
+					Wait_ms(200);
+					SEND_GST(ECU_Seri_Num);
+					Wait_ms(1500);
+					SEND_GST(Sup_HW_Ver);
+					Wait_ms(100);
+					SEND_GST(Vih_SW_Ver);
+					Wait_ms(100);
+					SEND_GST(Suply_code);
+					Wait_ms(100);
+					SEND_GST(SW_Unit_Num);
+					Wait_ms(100);
+					SEND_GST(SW_Unit_Ver);
+					Wait_ms(100);
+					SEND_GST(Part_num);
+					Wait_ms(100);
+					SEND_GST(ExS);
+					State_machine = 0x01;
+				}
+			break;
+			case 0x07: //  Deletion Check Driver1 FP1
+				if(State_machine == 0x00)
+				{
+					Pre_print = 0;
+					SEND_GST(DEL_F);	
+					Wait_ms(3000);
+					SEND_GST(Ex);
+					Wait_ms(200);
+					SEND_GST(IOCBI);
+					Wait_ms(200);
+					SEND_GST(FPM_Enroll);
+					State_machine = 0x03;
+				}
+				else if(State_machine == 0x04)
+				{
+					SEND_GST(Flow);
+					State_machine = 0x05;
+				}
+			break;
+			default: break;
+		}
+
+/*		On_Time = Delay_Time_Get(TID_100ms_TIMER);
+		if (On_Time == TRUE){
+			//SEND_GST(ADD_F);
+			//SEND_2B0(SW,CAN_Rx_Buf[1] );
+		}
+		// LED ON/OFF Control   
+		On_Time = Delay_Time_Get(TID_500ms_TIMER);
+		
+		if (On_Time == TRUE)
+		{
+			//LED_STATUS_UPDOWNLOAD = ~LED_STATUS_UPDOWNLOAD;
+			if (SW6_UPDOWN_MODE_SEL)
+			{
+				//SEND_52A(LANG_Tx_Data);
+			}
+		}
+
+		if (SW6_UPDOWN_MODE_SEL)
+		{
+			On_Time = Delay_Time_Get(TID_2000ms_TIMER);
+			if (On_Time == TRUE)
+			{
+				LANG_Tx_Data++;
+
+				if (LANG_Tx_Data > 0x1FU)
+				{
+					LANG_Tx_Data = 0x00U;
+				}
+			}
+		}
+		else
+		{
+			if (Sel_Tx_Mode_Pre != Sel_Tx_Mode)
+			{
+				Sel_Tx_Mode_Pre = Sel_Tx_Mode;
+
+				if (SW2_UPDATE_START == 0x00U)
+				{
+					LANG_Tx_Data++;
+				}
+
+				if (LANG_Tx_Data > 0x1FU)
+				{
+					LANG_Tx_Data = 0x00U;
+				}
+			}
+		}
+*/
+	}
+}
+

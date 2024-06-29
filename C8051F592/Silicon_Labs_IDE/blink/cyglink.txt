@@ -1,0 +1,4 @@
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\F50x_Target_App_InfoBlock.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\L51_BANK.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\STARTUP.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\main.obj"  TO "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\blink\blink" NOOL CODE(0x4000-0x7FFF) BANK0(?CO?F50x_Target_App_InfoBlock(0x7FF0))  BANKAREA(8000H,0FFFFH) 
