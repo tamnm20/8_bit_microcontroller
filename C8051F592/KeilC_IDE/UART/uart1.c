@@ -87,7 +87,6 @@ void main (void)
 		inputcharacter = UART1_Recv_1Byte ();
 		UART1_SendByte(inputcharacter);
 		//UART1_SendByte('b');
-		//T0_Wait_ms(1000);
    }
 }
 
@@ -139,6 +138,8 @@ U8 UART1_Recv_1Byte (void)
                                        // // Enable crossbar and weak pull-ups
 		SFRPAGE = SFRPAGE_save;
  }
+
+
 
 //-----------------------------------------------------------------------------
 // SYSCLK_Init
@@ -235,60 +236,3 @@ void T0_Wait_ms (U8 ms)
 
    TR0 = 0;                            // Stop Timer0
 }
-#if 0
-#ifdef SDCC
-
-// SDCC does not include a definition for putchar(), which is used in printf()
-// and so it is defined here.  The prototype does not need to be explicitly
-// defined because it is provided in stdio.h
-
-//-----------------------------------------------------------------------------
-// putchar
-//-----------------------------------------------------------------------------
-//
-// Return Value : None
-// Parameters   : character to send to UART
-//
-// This function outputs a character to the UART.
-//-----------------------------------------------------------------------------
-void putchar (char output)
-{
-   if (output == '\n')
-   {
-      while (!TI0);
-      TI0 = 0;
-      SBUF0 = 0x0D;
-   }
-   while (!TI0);
-   TI0 = 0;
-   SBUF0 = output;
-}
-
-// SDCC does not include a definition for getkey(), and so it is defined here
-
-//-----------------------------------------------------------------------------
-// getkey
-//-----------------------------------------------------------------------------
-//
-// Return Value : character received from UART
-// Parameters   : None
-//
-// This function returns a character received from the UART
-// Assumes SFR page has been set correctly by the application
-//-----------------------------------------------------------------------------
-U8 getkey (void)
-{
-   U8 received;
-
-   while (!RI0);                       // Wait for character to be received
-   received = SBUF0;                   // Read it
-   RI0 = 0;                            // Clear received data indicator
-
-   return received;
-}
-
-#endif
-#endif
-//-----------------------------------------------------------------------------
-// End Of File
-//-----------------------------------------------------------------------------

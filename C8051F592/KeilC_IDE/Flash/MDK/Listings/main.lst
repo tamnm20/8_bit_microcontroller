@@ -1,0 +1,395 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\User\main.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User\Lib\Inc) DEBUG 
+                    -PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // F580_Flash_Test.c
+   3          //-----------------------------------------------------------------------------
+   4          // Copyright 2008 Silicon Laboratories, Inc.
+   5          // http://www.silabs.com
+   6          //
+   7          // Program Description:
+   8          //
+   9          // This program tests all the functions available in F580_FlashPrimitives.c
+  10          // and F580_FlashUtils.c.  It uses a test data array to mimic the changes
+  11          // made to the Flash and test for correctness.  While the test is running, the
+  12          // LED is on.  If the test fails, the LED will turn off.  If the test passes,
+  13          // the LED will blink.
+  14          //
+  15          // Pinout:
+  16          //
+  17          //    P1.3 -> LED
+  18          //
+  19          //    all other port pins unused
+  20          //
+  21          // How To Test:
+  22          //
+  23          // Option 1:
+  24          // 1) Load the F580_Flash_test.c, F580_FlashPrimitives.c, and F580_FlashUtils.c
+  25          //    files in the Silicon Labs IDE.
+  26          // 2) Compile and download code to a 'F580 device.
+  27          // 3) Verify the LED pin of J13 are populated on the 'F580 TB.
+  28          // 4) Run the code
+  29          // 5) Check that the LED is blinking, indicating a passing test.
+  30          //
+  31          // Option 2:
+  32          // 1) Load the F580_Flash_Test.c, F580_FlashPrimitives.c, and F580_FlashUtils.c
+  33          //    files in the Silicon Labs IDE.
+  34          // 2) Compile and download code to a 'F580 device.
+  35          // 3) Open the Code window in the IDE and verify the following data at
+  36          //    address <start_address>:
+  37          //
+  38          //        48 49 4A 44 45 46
+  39          //        47 00 48 49 4A 44
+  40          //        45 46 47 00 5A 5A
+  41          //        5A 5A 5A 5A 5A 5A
+  42          //
+  43          // Target:         C8051F580
+  44          // Tool chain:     Raisonance / Keil / SDCC
+  45          // Command Line:   None
+  46          //
+  47          // Release 1.2 / 15 JAN 2015 (TP)
+  48          //    -Removed SFLE bit
+  49          //    -Updated FlashPrimitives functions to work if the functions are located
+  50          //        in code banks other than Bank 0.
+  51          //
+  52          // Release 1.1 / 11 MAR 2010 (GP)
+  53          //    -Tested with Raisonance
+  54          //
+C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 2   
+
+  55          // Release 1.0 / 23 OCT 2008 (GP)
+  56          //    -Initial Revision
+  57          //
+  58          
+  59          //-----------------------------------------------------------------------------
+  60          // Includes
+  61          //-----------------------------------------------------------------------------
+  62          
+  63          #include <compiler_defs.h>
+  64          #include <C8051F580.h>            // SFR declarations
+  65          #include "F580_FlashPrimitives.h"
+  66          #include "F580_FlashUtils.h"
+  67          
+  68          //-----------------------------------------------------------------------------
+  69          // Pin Declarations
+  70          //-----------------------------------------------------------------------------
+  71          
+  72          SBIT (LED, SFR_P1, 3);                 // LED == 1 means ON
+  73          
+  74          //-----------------------------------------------------------------------------
+  75          // Function Prototypes
+  76          //-----------------------------------------------------------------------------
+  77          
+  78          void OSCILLATOR_Init (void);           // Oscillator initialization routine
+  79          void VDDMon_Init (void);               // VDD Monitor initialization routine
+  80          void PORT_Init (void);                 // Port initialization routine
+  81          
+  82          //-----------------------------------------------------------------------------
+  83          // Function Prototypes
+  84          //-----------------------------------------------------------------------------
+  85          
+  86          // This is the test address.  It is a 17-bit address that treats the 128K
+  87          // or 96K of code space as a linear space.
+  88          FLADDR start_address = 0x08000;        // Address located in Bank 3
+  89          
+  90          SEGMENT_VARIABLE (test_write_buff[8],   U8, SEG_XDATA) = "ABCDEFG";
+  91          SEGMENT_VARIABLE (test_write_buff2[3],  U8, SEG_XDATA) = "HIJ";
+  92          SEGMENT_VARIABLE (test_read_buff[8],    U8, SEG_XDATA) = {0};
+  93          SEGMENT_VARIABLE (test_compare_buff[8], U8, SEG_XDATA) = "ABCDEFG";
+  94          
+  95          //-----------------------------------------------------------------------------
+  96          // main() Routine
+  97          //-----------------------------------------------------------------------------
+  98          
+  99          void main (void)
+ 100          {
+ 101   1         U8 temp_byte = 0x00;
+ 102   1         U8 i, j;
+ 103   1      
+ 104   1         bit error_flag = 0;
+ 105   1      
+ 106   1         SFRPAGE = ACTIVE_PAGE;              // Set for PCA0MD and RSTSRC
+ 107   1      
+ 108   1         PCA0MD &= ~0x40;                    // Disable the watchdog timer
+ 109   1      
+ 110   1         if ((RSTSRC & 0x02) != 0x02)
+ 111   1         {
+ 112   2            if ((RSTSRC & 0x40) == 0x40)
+ 113   2            {
+ 114   3               LED = 0;
+ 115   3               while (1);                    // Last reset was caused by a Flash
+ 116   3                                             // Error Device Reset
+C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 3   
+
+ 117   3                                             // LED is off and loop forever to
+ 118   3                                             // indicate error
+ 119   3            }
+ 120   2         }
+ 121   1      
+ 122   1         OSCILLATOR_Init ();                 // Initialize the internal oscillator
+ 123   1         VDDMon_Init ();                     // Initialize the VDD monitor
+ 124   1         PORT_Init ();                       // Initialize the crossbar
+ 125   1      
+ 126   1         LED = 1;
+ 127   1      
+ 128   1         // Initially erase the test pages of Flash
+ 129   1         FLASH_PageErase (start_address);
+ 130   1         FLASH_PageErase (start_address + 2);
+ 131   1      
+ 132   1         //BEGIN TEST================================================================
+ 133   1      
+ 134   1         // Check if able to Write and Read the Flash--------------------------------
+ 135   1         FLASH_ByteWrite (start_address, 0xA5);
+ 136   1      
+ 137   1         temp_byte = FLASH_ByteRead (start_address);
+ 138   1      
+ 139   1         if (temp_byte != 0xA5)
+ 140   1         {
+ 141   2            error_flag = 1;
+ 142   2         }
+ 143   1         //--------------------------------------------------------------------------
+ 144   1      
+ 145   1      
+ 146   1         // Check if able to Erase a page of the Flash-------------------------------
+ 147   1         FLASH_PageErase (start_address);
+ 148   1      
+ 149   1         temp_byte = FLASH_ByteRead (start_address);
+ 150   1      
+ 151   1         if (temp_byte != 0xFF)
+ 152   1         {
+ 153   2            error_flag = 1;
+ 154   2         }
+ 155   1         //--------------------------------------------------------------------------
+ 156   1      
+ 157   1         // Check if able to write and read a series of bytes------------------------
+ 158   1         FLASH_Write (start_address, test_write_buff, sizeof(test_write_buff));
+ 159   1      
+ 160   1         FLASH_Read (test_read_buff, start_address, sizeof(test_write_buff));
+ 161   1      
+ 162   1         for (i = 0; i < sizeof(test_write_buff); i++)
+ 163   1         {
+ 164   2            if (test_read_buff[i] != test_write_buff[i])
+ 165   2            {
+ 166   3               error_flag = 1;
+ 167   3            }
+ 168   2         }
+ 169   1         //--------------------------------------------------------------------------
+ 170   1      
+ 171   1         // Check if able to Erase a few bytes---------------------------------------
+ 172   1         FLASH_Clear (start_address, 2);
+ 173   1      
+ 174   1         FLASH_Read (test_read_buff, start_address, sizeof(test_write_buff));
+ 175   1      
+ 176   1         // Simulate the same changes to a data array for comparison
+ 177   1         test_compare_buff[0] = 0xFF;
+ 178   1         test_compare_buff[1] = 0xFF;
+C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 4   
+
+ 179   1      
+ 180   1         for (i = 0; i < sizeof(test_compare_buff); i++)
+ 181   1         {
+ 182   2            if (test_read_buff[i] != test_compare_buff[i])
+ 183   2            {
+ 184   3               error_flag = 1;
+ 185   3            }
+ 186   2         }
+ 187   1         //--------------------------------------------------------------------------
+ 188   1      
+ 189   1         // Check if able to "update" (erase then re-write) a few bytes--------------
+ 190   1         FLASH_Update (start_address, test_write_buff2, 3);
+ 191   1      
+ 192   1         FLASH_Read (test_read_buff, start_address, sizeof(test_write_buff));
+ 193   1      
+ 194   1         // Simulate the same changes to a data array for comparison
+ 195   1         test_compare_buff[0] = test_write_buff2[0];
+ 196   1         test_compare_buff[1] = test_write_buff2[1];
+ 197   1         test_compare_buff[2] = test_write_buff2[2];
+ 198   1      
+ 199   1         for (i = 0; i < sizeof(test_compare_buff); i++)
+ 200   1         {
+ 201   2            if (test_read_buff[i] != test_compare_buff[i])
+ 202   2            {
+ 203   3               error_flag = 1;
+ 204   3            }
+ 205   2         }
+ 206   1         //--------------------------------------------------------------------------
+ 207   1      
+ 208   1         // Check if able to copy data in the Flash----------------------------------
+ 209   1         FLASH_Copy (start_address + sizeof(test_write_buff), start_address,
+ 210   1                     sizeof(test_write_buff));
+ 211   1      
+ 212   1         FLASH_Read (test_read_buff, start_address + sizeof(test_write_buff),
+ 213   1                    sizeof(test_read_buff));
+ 214   1      
+ 215   1         for (i = 0; i < sizeof(test_write_buff); i++)
+ 216   1         {
+ 217   2            if (test_read_buff[i] != test_compare_buff[i])
+ 218   2            {
+ 219   3               error_flag = 1;
+ 220   3            }
+ 221   2         }
+ 222   1         //--------------------------------------------------------------------------
+ 223   1      
+ 224   1         // FLASH test routines------------------------------------------------------
+ 225   1         FLASH_Fill (start_address + sizeof(test_write_buff) * 2,
+ 226   1                     sizeof(test_write_buff), 0x5A);
+ 227   1      
+ 228   1         FLASH_Read(test_read_buff, start_address + sizeof(test_write_buff) * 2,
+ 229   1                    sizeof(test_write_buff));
+ 230   1      
+ 231   1         for (i = 0; i < sizeof(test_write_buff); i++)
+ 232   1         {
+ 233   2            if (test_read_buff[i] != 0x5A)
+ 234   2            {
+ 235   3               error_flag = 1;
+ 236   3            }
+ 237   2         }
+ 238   1         FLASH_Update(0x0003, test_write_buff2, 3);
+ 239   1         //--------------------------------------------------------------------------
+ 240   1      
+C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 5   
+
+ 241   1         //END OF TEST===============================================================
+ 242   1      
+ 243   1         while (1)                           // Loop forever
+ 244   1         {
+ 245   2            // Blink LED to indicate success
+ 246   2            if (error_flag == 0)
+ 247   2            {
+ 248   3               LED = !LED;
+ 249   3      
+ 250   3               // Simple delay loop
+ 251   3               for (i = 65000; i > 0; i--)
+ 252   3               {
+ 253   4                  for (j = 65000; j > 0; j--)
+ 254   4                  {
+ 255   5                  }
+ 256   4               }
+ 257   3            }
+ 258   2            else
+ 259   2            {
+ 260   3               LED = 0;
+ 261   3            }
+ 262   2         }
+ 263   1      }
+ 264          
+ 265          //-----------------------------------------------------------------------------
+ 266          // Initialization Subroutines
+ 267          //-----------------------------------------------------------------------------
+ 268          
+ 269          //-----------------------------------------------------------------------------
+ 270          // OSCILLATOR_Init
+ 271          //-----------------------------------------------------------------------------
+ 272          //
+ 273          // Return Value : None
+ 274          // Parameters   : None
+ 275          //
+ 276          // This function initializes the system clock to use the internal oscillator
+ 277          // at its maximum frequency / 8.
+ 278          //
+ 279          //-----------------------------------------------------------------------------
+ 280          
+ 281          void OSCILLATOR_Init (void)
+ 282          {
+ 283   1         U8 SFRPAGE_save = SFRPAGE;
+ 284   1         SFRPAGE = CONFIG_PAGE;
+ 285   1      
+ 286   1         OSCICN = 0x84;                      // Configure internal oscillator for
+ 287   1                                             // 24 MHz / 8
+ 288   1      
+ 289   1         SFRPAGE = SFRPAGE_save;
+ 290   1      }
+ 291          
+ 292          //-----------------------------------------------------------------------------
+ 293          // VDDMon_Init
+ 294          //-----------------------------------------------------------------------------
+ 295          //
+ 296          // Return Value : None
+ 297          // Parameters   : None
+ 298          //
+ 299          // This function initializes the VDD Monitor and enables it as a reset source.
+ 300          // The VDD Monitor is enabled following a power-on reset, but this routine
+ 301          // explicitly enables the VDD Monitor.
+ 302          //
+C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 6   
+
+ 303          // Note: If the VDD Monitor is not enabled or not enabled as a reset source,
+ 304          // any attempt to write or erase Flash will cause a Flash Error Device Reset.
+ 305          //-----------------------------------------------------------------------------
+ 306          void VDDMon_Init(void)
+ 307          {
+ 308   1         U8 SFRPAGE_save = SFRPAGE;
+ 309   1         SFRPAGE = ACTIVE_PAGE;
+ 310   1      
+ 311   1         // Step 1. Enable the VDD Monitor and set it to the high threshold
+ 312   1         VDM0CN = 0xA0;
+ 313   1      
+ 314   1         // Step 2. Wait for the VDD Monitor to stabilize (approximately 5 µs).
+ 315   1         // Note: This delay should be omitted if software contains routines which
+ 316   1         // erase or write Flash memory.
+ 317   1         // Omitted in this code
+ 318   1      
+ 319   1         // Step 3. Select the VDD Monitor as a reset source (PORSF bit in
+ 320   1         // RSTSRC = ‘1’).
+ 321   1      
+ 322   1         RSTSRC = 0x02;
+ 323   1      
+ 324   1         SFRPAGE = SFRPAGE_save;
+ 325   1      }
+ 326          
+ 327          //-----------------------------------------------------------------------------
+ 328          // PORT_Init
+ 329          //-----------------------------------------------------------------------------
+ 330          //
+ 331          // Return Value : None
+ 332          // Parameters   : None
+ 333          //
+ 334          // This function configures the crossbar and ports pins.
+ 335          //
+ 336          // P1.3   digital   push-pull     LED
+ 337          //
+ 338          //-----------------------------------------------------------------------------
+ 339          void PORT_Init (void)
+ 340          {
+ 341   1         U8 SFRPAGE_save = SFRPAGE;
+ 342   1         SFRPAGE = CONFIG_PAGE;
+ 343   1      
+ 344   1         P1MDIN |= 0x08;                     // P1.3 is digital
+ 345   1         P1MDOUT |= 0x08;                    // P1.3 is push-pull
+ 346   1      
+ 347   1         XBR2    = 0x40;                     // Enable crossbar and enable
+ 348   1                                             // weak pull-ups
+ 349   1      
+ 350   1         SFRPAGE = SFRPAGE_save;
+ 351   1      }
+ 352          
+ 353          //-----------------------------------------------------------------------------
+ 354          // End Of File
+ 355          //-----------------------------------------------------------------------------
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    704    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     27    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4       1
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 7   
+
+   BIT SIZE         =   ----       1
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

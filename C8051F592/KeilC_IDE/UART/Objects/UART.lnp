@@ -2,4 +2,5 @@
 ".\Objects\main.obj" 
 TO ".\Objects\UART" 
 
-PRINT(".\Listings\UART.map")
+PRINT(".\Listings\UART.map") CLASSES (CODE (C:0x60BB-C:0x80BA), CONST (C:0x60BB-C:0x80BA), 
+ECODE (C:0x60BB-C:0x80BA), HCONST (C:0x60BB-C:0x80BA)) 

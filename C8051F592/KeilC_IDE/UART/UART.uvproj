@@ -139,7 +139,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -149,7 +149,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>9</TargetSelection>
+          <TargetSelection>10</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -242,8 +242,8 @@
               </RXB>
               <Ocm1>
                 <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
+                <StartAddress>0x60bb</StartAddress>
+                <Size>0x2000</Size>
               </Ocm1>
               <Ocm2>
                 <Type>0</Type>
@@ -309,7 +309,7 @@
           </Target51Misc>
           <C51>
             <RegisterColoring>0</RegisterColoring>
-            <VariablesInOrder>0</VariablesInOrder>
+            <VariablesInOrder>1</VariablesInOrder>
             <IntegerPromotion>1</IntegerPromotion>
             <uAregs>0</uAregs>
             <UseInterruptVector>1</UseInterruptVector>
@@ -319,7 +319,7 @@
             <SizeSpeed>1</SizeSpeed>
             <ObjectExtend>1</ObjectExtend>
             <ACallAJmp>0</ACallAJmp>
-            <InterruptVectorAddress>0</InterruptVectorAddress>
+            <InterruptVectorAddress>24576</InterruptVectorAddress>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>

@@ -2,4 +2,5 @@
 ".\Objects\main.obj" 
 TO ".\Objects\Blink" 
 
-PRINT(".\Blink.map") CLASSES (ECODE (C:0x0-C:0xFFFF), HCONST (C:0x0-C:0xFFFF)) 
+PRINT(".\Blink.map") CLASSES (CODE (C:0x40BB-C:0x60BA), CONST (C:0x40BB-C:0x60BA), 
+ECODE (C:0x40BB-C:0x60BA), HCONST (C:0x40BB-C:0x60BA)) 

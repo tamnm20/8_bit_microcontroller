@@ -1,0 +1,306 @@
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE F580_FLASHUTILS
+OBJECT MODULE PLACED IN .\Objects\F580_FlashUtils.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\User\Lib\Src\F580_FlashUtils.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\U
+                    -ser\Lib\Inc) DEBUG PRINT(.\Listings\F580_FlashUtils.lst) TABS(2) OBJECT(.\Objects\F580_FlashUtils.obj)
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // F580_FlashUtils.c
+   3          //-----------------------------------------------------------------------------
+   4          // Copyright 2008 Silicon Laboratories, Inc.
+   5          //
+   6          // This program contains several useful utilities for writing and updating
+   7          // FLASH memory.
+   8          //
+   9          // Target:         C8051F580
+  10          // Tool chain:     Raisonance / Keil / SDCC
+  11          // Command Line:   None
+  12          //
+  13          // Release 1.2 / 15 JAN 2015 (TP)
+  14          //    -Removed SFLE bit
+  15          //    -Updated FlashPrimitives functions to work if the functions are located
+  16          //        in code banks other than Bank 0.
+  17          //
+  18          // Release 1.1 / 11 MAR 2010 (GP)
+  19          //    -Tested with Raisonance
+  20          //
+  21          // Release 1.0 / 23 OCT 2008 (GP)
+  22          //    -Initial Revision
+  23          //
+  24          //-----------------------------------------------------------------------------
+  25          // Includes
+  26          //-----------------------------------------------------------------------------
+  27          
+  28          #include <compiler_defs.h>
+  29          #include <c8051F580.h>
+  30          #include "F580_FlashPrimitives.h"
+  31          #include "F580_FlashUtils.h"
+  32          
+  33          //-----------------------------------------------------------------------------
+  34          // Structures, Unions, Enumerations, and Type Definitions
+  35          //-----------------------------------------------------------------------------
+  36          
+  37          //-----------------------------------------------------------------------------
+  38          // Global Constants
+  39          //-----------------------------------------------------------------------------
+  40          
+  41          //-----------------------------------------------------------------------------
+  42          // Function Prototypes
+  43          //-----------------------------------------------------------------------------
+  44          
+  45          // FLASH read/write/erase routines
+  46          void FLASH_Write (FLADDR dest, U8 *src, U16 numbytes);
+  47          U8 * FLASH_Read  (U8 *dest, FLADDR src, U16 numbytes);
+  48          void FLASH_Clear (FLADDR addr, U16 numbytes);
+  49          
+  50          // FLASH update/copy routines
+  51          void FLASH_Update (FLADDR dest, U8 *src, U16 numbytes);
+  52          void FLASH_Copy   (FLADDR dest, FLADDR src, U16 numbytes);
+  53          
+  54          // FLASH test routines
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 2   
+
+  55          void FLASH_Fill (FLADDR addr, U32 length, U8 fill);
+  56          
+  57          //-----------------------------------------------------------------------------
+  58          // Global Variables
+  59          //-----------------------------------------------------------------------------
+  60          
+  61          //-----------------------------------------------------------------------------
+  62          // FLASH Routines
+  63          //-----------------------------------------------------------------------------
+  64          
+  65          //-----------------------------------------------------------------------------
+  66          // FLASH_Clear
+  67          //-----------------------------------------------------------------------------
+  68          //
+  69          // This routine erases <numbytes> starting from the FLASH addressed by
+  70          // <dest> by performing a read-modify-write operation using <FLASH_TEMP> as
+  71          // a temporary holding area.  This function accepts <numbytes> up to
+  72          // <FLASH_PAGESIZE>.
+  73          //
+  74          //-----------------------------------------------------------------------------
+  75          void FLASH_Clear (FLADDR dest, U16 numbytes)
+  76          {
+  77   1         FLADDR dest_1_page_start;           // First address in 1st page
+  78   1                                             // containing <dest>
+  79   1         FLADDR dest_1_page_end;             // Last address in 1st page
+  80   1                                             // containing <dest>
+  81   1         FLADDR dest_2_page_start;           // First address in 2nd page
+  82   1                                             // containing <dest>
+  83   1         FLADDR dest_2_page_end;             // Last address in 2nd page
+  84   1                                             // containing <dest>
+  85   1         U16 numbytes_remainder;             // When crossing page boundary,
+  86   1                                             // number of <src> bytes on 2nd page
+  87   1         U16 FLASH_pagesize;                 // Size of FLASH page to update
+  88   1      
+  89   1         FLADDR  wptr;                       // Write address
+  90   1         FLADDR  rptr;                       // Read address
+  91   1      
+  92   1         U16 length;
+  93   1      
+  94   1         FLASH_pagesize = FLASH_PAGESIZE;
+  95   1         
+  96   1         dest_1_page_start = dest & (0x10000 | ~(FLASH_pagesize - 1));
+  97   1         dest_1_page_end = dest_1_page_start + FLASH_pagesize - 1;
+  98   1         dest_2_page_start = (dest + numbytes)  & (0x10000 | ~(FLASH_pagesize - 1));
+  99   1         dest_2_page_end = dest_2_page_start + FLASH_pagesize - 1;
+ 100   1      
+ 101   1         if (dest_1_page_end == dest_2_page_end) {
+ 102   2      
+ 103   2            // 1. Erase Scratch page
+ 104   2            FLASH_PageErase (FLASH_TEMP);
+ 105   2      
+ 106   2            // 2. Copy bytes from first byte of dest page to dest-1 to Scratch page
+ 107   2      
+ 108   2            wptr = FLASH_TEMP;
+ 109   2            rptr = dest_1_page_start;
+ 110   2            length = dest - dest_1_page_start;
+ 111   2            FLASH_Copy (wptr, rptr, length);
+ 112   2      
+ 113   2            // 3. Copy from (dest+numbytes) to dest_page_end to Scratch page
+ 114   2      
+ 115   2            wptr = FLASH_TEMP + dest - dest_1_page_start + numbytes;
+ 116   2            rptr = dest + numbytes;
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 3   
+
+ 117   2            length = dest_1_page_end - dest - numbytes + 1;
+ 118   2            FLASH_Copy (wptr, rptr, length);
+ 119   2      
+ 120   2            // 4. Erase destination page
+ 121   2            FLASH_PageErase (dest_1_page_start);
+ 122   2      
+ 123   2            // 5. Copy Scratch page to destination page
+ 124   2            wptr = dest_1_page_start;
+ 125   2            rptr = FLASH_TEMP;
+ 126   2            length = FLASH_pagesize;
+ 127   2            FLASH_Copy (wptr, rptr, length);
+ 128   2      
+ 129   2         } else {                            // value crosses page boundary
+ 130   2            // 1. Erase Scratch page
+ 131   2            FLASH_PageErase (FLASH_TEMP);
+ 132   2      
+ 133   2            // 2. Copy bytes from first byte of dest page to dest-1 to Scratch page
+ 134   2      
+ 135   2            wptr = FLASH_TEMP;
+ 136   2            rptr = dest_1_page_start;
+ 137   2            length = dest - dest_1_page_start;
+ 138   2            FLASH_Copy (wptr, rptr, length);
+ 139   2      
+ 140   2            // 3. Erase destination page 1
+ 141   2            FLASH_PageErase (dest_1_page_start);
+ 142   2      
+ 143   2            // 4. Copy Scratch page to destination page 1
+ 144   2            wptr = dest_1_page_start;
+ 145   2            rptr = FLASH_TEMP;
+ 146   2            length = FLASH_pagesize;
+ 147   2            FLASH_Copy (wptr, rptr, length);
+ 148   2      
+ 149   2            // now handle 2nd page
+ 150   2      
+ 151   2            // 5. Erase Scratch page
+ 152   2            FLASH_PageErase (FLASH_TEMP);
+ 153   2      
+ 154   2            // 6. Copy bytes from numbytes remaining to dest-2_page_end to Scratch page
+ 155   2      
+ 156   2            numbytes_remainder = numbytes - (dest_1_page_end - dest + 1);
+ 157   2            wptr = FLASH_TEMP + numbytes_remainder;
+ 158   2            rptr = dest_2_page_start + numbytes_remainder;
+ 159   2            length = FLASH_pagesize - numbytes_remainder;
+ 160   2            FLASH_Copy (wptr, rptr, length);
+ 161   2      
+ 162   2            // 7. Erase destination page 2
+ 163   2            FLASH_PageErase (dest_2_page_start);
+ 164   2      
+ 165   2            // 8. Copy Scratch page to destination page 2
+ 166   2            wptr = dest_2_page_start;
+ 167   2            rptr = FLASH_TEMP;
+ 168   2            length = FLASH_pagesize;
+ 169   2            FLASH_Copy (wptr, rptr, length);
+ 170   2         }
+ 171   1      }
+ 172          
+ 173          
+ 174          
+ 175          //-----------------------------------------------------------------------------
+ 176          // FLASH_Update
+ 177          //-----------------------------------------------------------------------------
+ 178          //
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 4   
+
+ 179          // This routine replaces <numbytes> from <src> to the FLASH addressed by
+ 180          // <dest>.  This function calls FLASH_Clear() to handle the dirty work of
+ 181          // initializing all <dest> bytes to 0xff's prior to copying the bytes from
+ 182          // <src> to <dest>. This function accepts <numbytes> up to <FLASH_PAGESIZE>.
+ 183          //
+ 184          //-----------------------------------------------------------------------------
+ 185          void FLASH_Update (FLADDR dest, U8 *src, U16 numbytes)
+ 186          {
+ 187   1         // 1. Erase <numbytes> starting from <dest>
+ 188   1         FLASH_Clear (dest, numbytes);
+ 189   1      
+ 190   1         // 2. Write <numbytes> from <src> to <dest>
+ 191   1         FLASH_Write (dest, src, numbytes);
+ 192   1      }
+ 193          
+ 194          
+ 195          
+ 196          //-----------------------------------------------------------------------------
+ 197          // FLASH_Write
+ 198          //-----------------------------------------------------------------------------
+ 199          //
+ 200          // This routine copies <numbytes> from <src> to the linear FLASH address
+ 201          // <dest>.
+ 202          //
+ 203          //-----------------------------------------------------------------------------
+ 204          void FLASH_Write (FLADDR dest, U8 *src, U16 numbytes)
+ 205          {
+ 206   1         U32 i;
+ 207   1      
+ 208   1         for (i = dest; i < dest+numbytes; i++) {
+ 209   2            FLASH_ByteWrite (i, *src++);
+ 210   2         }
+ 211   1      }
+ 212          
+ 213          //-----------------------------------------------------------------------------
+ 214          // FLASH_Read
+ 215          //-----------------------------------------------------------------------------
+ 216          //
+ 217          // This routine copies <numbytes> from the linear FLASH address <src> to
+ 218          // <dest>.
+ 219          //
+ 220          //-----------------------------------------------------------------------------
+ 221          U8 * FLASH_Read (U8 *dest, FLADDR src, U16 numbytes)
+ 222          {
+ 223   1         U32 i;
+ 224   1      
+ 225   1         for (i = 0; i < numbytes; i++) {
+ 226   2            *dest++ = FLASH_ByteRead (src+i);
+ 227   2         }
+ 228   1         return dest;
+ 229   1      }
+ 230          
+ 231          //-----------------------------------------------------------------------------
+ 232          // FLASH_Copy
+ 233          //-----------------------------------------------------------------------------
+ 234          //
+ 235          // This routine copies <numbytes> from <src> to the linear FLASH address
+ 236          // <dest>.
+ 237          //
+ 238          //-----------------------------------------------------------------------------
+ 239          void FLASH_Copy (FLADDR dest, FLADDR src, U16 numbytes)
+ 240          {
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 5   
+
+ 241   1         U32 i;
+ 242   1      
+ 243   1         for (i = 0; i < numbytes; i++) {
+ 244   2      
+ 245   2            FLASH_ByteWrite ((FLADDR) dest+i,
+ 246   2                             FLASH_ByteRead((FLADDR) src+i));
+ 247   2         }
+ 248   1      }
+ 249          
+ 250          
+ 251          //-----------------------------------------------------------------------------
+ 252          // FLASH_Fill
+ 253          //-----------------------------------------------------------------------------
+ 254          //
+ 255          // This routine fills the FLASH beginning at <addr> with <lenght> bytes.
+ 256          //
+ 257          //-----------------------------------------------------------------------------
+ 258          void FLASH_Fill (FLADDR addr, U32 length, U8 fill)
+ 259          {
+ 260   1         U32 i;
+ 261   1      
+ 262   1         for (i = 0; i < length; i++) {
+ 263   2            FLASH_ByteWrite (addr+i, fill);
+ 264   2         }
+ 265   1      }
+ 266          
+ 267          
+ 268          //-----------------------------------------------------------------------------
+ 269          // End Of File
+ 270          //-----------------------------------------------------------------------------
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1105    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      92
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

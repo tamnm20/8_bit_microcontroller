@@ -40,7 +40,6 @@
 // Global CONSTANTS
 //-----------------------------------------------------------------------------
 #define SYSCLK       24000000        // SYSCLK frequency in Hz
-SBIT(LED, SFR_P1, 3);                 // LED='1' means ON
 SBIT(GREEN, SFR_P2, 1);
 //-----------------------------------------------------------------------------
 // Function PROTOTYPES
@@ -62,7 +61,7 @@ void main (void)
 
    OSCILLATOR_Init();                 // Configure system clock
    PORT_Init ();                       // Initialize crossbar
-   //TIMER2_Init (SYSCLK / 12 / 1000);     // Init Timer2 to generate interrupts
+   TIMER2_Init (SYSCLK / 12 / 1000);     // Init Timer2 to generate interrupts
 
    EA = 1;                             // Enable global interrupts
 
@@ -70,8 +69,8 @@ void main (void)
    {
       GREEN = !GREEN;
       //_nop_();
-      //delayms(1000);
-			delay(1000);  
+      delayms(1000);
+			//delay(1000);  
    }                          // Spin forever
 }
 
@@ -126,11 +125,6 @@ INTERRUPT(Timer2_ISR, INTERRUPT_TIMER2)
    TF2H = 0;                           // Clear Timer2 interrupt flag
    num++;
 }
-//void Timer2_ISR(void)
-//{
-//   TF2H = 0;                           // Clear Timer2 interrupt flag
-//   num++;	
-//}
 void delayms(int time)
 {
    //volatile int tmp = num;
@@ -141,7 +135,7 @@ void delay(int time)
 {
 	volatile int i,j;
 	for(i=0;i<time;i++){
-		for(j=0;j<3390;j++){
+		for(j=0;j<885;j++){
 			_nop_();
 		}
 	}

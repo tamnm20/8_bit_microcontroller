@@ -1,4 +1,4 @@
-AX51 MACRO ASSEMBLER  STARTUP                                                               06/29/24 08:13:49 PAGE     1
+AX51 MACRO ASSEMBLER  STARTUP                                                               07/01/24 16:18:18 PAGE     1
 
 
 MACRO ASSEMBLER AX51 V3.15.3.0
@@ -65,7 +65,7 @@ LOC    OBJ             LINE     SOURCE
                          56     ; <h> Stack Space for reentrant functions in the SMALL model.
                          57     ;  <q> IBPSTACK: Enable SMALL model reentrant stack
                          58     ;     <i> Stack space for reentrant functions in the SMALL model.
-AX51 MACRO ASSEMBLER  STARTUP                                                               06/29/24 08:13:49 PAGE     2
+AX51 MACRO ASSEMBLER  STARTUP                                                               07/01/24 16:18:18 PAGE     2
 
  0000                    59     IBPSTACK        EQU     0       ; set to 1 if small reentrant is used.
                          60     ;  <o> IBPSTACKTOP: End address of SMALL model stack <0x0-0xFF>
@@ -133,10 +133,10 @@ LOC    OBJ             LINE     SOURCE
                         122                     EXTRN CODE (?C_START)
                         123                     PUBLIC  ?C_STARTUP
                         124     
-AX51 MACRO ASSEMBLER  STARTUP                                                               06/29/24 08:13:49 PAGE     3
+AX51 MACRO ASSEMBLER  STARTUP                                                               07/01/24 16:18:18 PAGE     3
 
-000000                  125                     CSEG    AT      0000H
-000000 020000     F     126     ?C_STARTUP:     LJMP    STARTUP1
+004000                  125                     CSEG    AT      4000H
+004000 020000     F     126     ?C_STARTUP:     LJMP    STARTUP1
                         127     
 ------                  128                     RSEG    ?C_C51STARTUP
                         129     
@@ -201,7 +201,7 @@ LOC    OBJ             LINE     SOURCE
                         188     ;<h> Code Banking
                         189     ; <q> Select Bank 0 for L51_BANK.A51 Mode 4
                         190     
-AX51 MACRO ASSEMBLER  STARTUP                                                               06/29/24 08:13:49 PAGE     4
+AX51 MACRO ASSEMBLER  STARTUP                                                               07/01/24 16:18:18 PAGE     4
 
                                 
                                 
@@ -211,7 +211,7 @@ LOC    OBJ             LINE     SOURCE
 000009 020000     E     196                     LJMP    ?C_START
                         197     
                         198                     END
-AX51 MACRO ASSEMBLER  STARTUP                                                               06/29/24 08:13:49 PAGE     5
+AX51 MACRO ASSEMBLER  STARTUP                                                               07/01/24 16:18:18 PAGE     5
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -221,7 +221,7 @@ N A M E                        T Y P E  V A L U E     ATTRIBUTES
 
 ?C_C51STARTUP . . . . . . . .  C  SEG   00000CH       REL=UNIT, ALN=BYTE
 ?C_START. . . . . . . . . . .  C  ADDR  -------       EXT
-?C_STARTUP. . . . . . . . . .  C  ADDR  0000H     R   SEG=?CO?STARTUP?3
+?C_STARTUP. . . . . . . . . .  C  ADDR  4000H     R   SEG=?CO?STARTUP?3
 ?STACK. . . . . . . . . . . .  I  SEG   000001H       REL=UNIT, ALN=BYTE
 ACC . . . . . . . . . . . . .  D  ADDR  00E0H     A   
 B . . . . . . . . . . . . . .  D  ADDR  00F0H     A   
