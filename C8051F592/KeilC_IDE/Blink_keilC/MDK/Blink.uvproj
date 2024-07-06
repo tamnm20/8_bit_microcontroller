@@ -149,7 +149,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>9</TargetSelection>
+          <TargetSelection>10</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -242,7 +242,7 @@
               </RXB>
               <Ocm1>
                 <Type>0</Type>
-                <StartAddress>0x40bb</StartAddress>
+                <StartAddress>0x4000</StartAddress>
                 <Size>0x2000</Size>
               </Ocm1>
               <Ocm2>

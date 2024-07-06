@@ -1,0 +1,6 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj" 
+TO ".\Objects\GPIO" 
+
+PRINT(".\Listings\GPIO.map") CLASSES (CODE (C:0xBB-C:0x20BA), CONST (C:0xBB-C:0x20BA), 
+ECODE (C:0xBB-C:0x20BA), HCONST (C:0xBB-C:0x20BA)) 

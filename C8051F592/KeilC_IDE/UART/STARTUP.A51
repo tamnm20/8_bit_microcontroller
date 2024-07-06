@@ -110,7 +110,7 @@ SP      DATA    81H
 DPL     DATA    82H
 DPH     DATA    83H
 
-                NAME    ?C_STARTUP
+                NAME    ?C_STARTUP40
 
 
 ?C_C51STARTUP   SEGMENT   CODE
