@@ -1,8 +1,8 @@
-".\Objects\STARTUP.obj",
-".\Objects\main.obj",
-".\Objects\F580_FlashPrimitives.obj",
-".\Objects\F580_FlashUtils.obj" 
+COMMON {".\Objects\STARTUP.obj"},
+COMMON {".\Objects\main.obj"},
+BANK3 {".\Objects\F580_FlashPrimitives.obj"},
+BANK3 {".\Objects\F580_FlashUtils.obj"},
+COMMON {".\Objects\L51_BANK.obj"} 
 TO ".\Objects\Flash" 
-
-PRINT(".\Listings\Flash.map") CLASSES (CODE (C:0x18-C:0xFFFF), CONST (C:0x18-C:0xFFFF), 
-ECODE (C:0x18-C:0xFFFF), HCONST (C:0x18-C:0xFFFF)) 
+BankArea (0x008000, 0x00FFFF) 
+PRINT(".\Listings\Flash.map")

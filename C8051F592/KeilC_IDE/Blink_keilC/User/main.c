@@ -40,6 +40,7 @@
 // Global CONSTANTS
 //-----------------------------------------------------------------------------
 #define SYSCLK       24000000        // SYSCLK frequency in Hz
+SBIT(YELLOW, SFR_P2, 0);
 SBIT(GREEN, SFR_P2, 1);
 //-----------------------------------------------------------------------------
 // Function PROTOTYPES
@@ -64,12 +65,12 @@ void main (void)
    TIMER2_Init (SYSCLK / 12 / 1000);     // Init Timer2 to generate interrupts
 
    EA = 1;                             // Enable global interrupts
-
+		P2 =1;
    while (1)
    {
-      GREEN = !GREEN;
+      YELLOW = !YELLOW;
       //_nop_();
-      delayms(1000);
+      delayms(100);
 			//delay(1000);  
    }                          // Spin forever
 }

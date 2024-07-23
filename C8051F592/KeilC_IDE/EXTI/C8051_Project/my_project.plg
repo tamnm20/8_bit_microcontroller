@@ -1,0 +1,55 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Admin\Documents\Tuan_2024\At85\C8051_Project\my_project.uvproj
+Project File Date:  07/01/2024
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+assembling STARTUP.A51...
+compiling clock.c...
+compiling exti.c...
+compiling gpio.c...
+compiling main.c...
+compiling timer.c...
+linking...
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    STATE_SW2/GPIO
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    TIMER2_INTERRUPT_INIT/TIMER
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    _DELAY_IT_MS/TIMER
+Program Size: data=33.0 xdata=0 const=0 code=557
+"my_project" - 0 Error(s), 3 Warning(s).
+Load "C:\\Users\\Admin\\Documents\\Tuan_2024\\At85\\C8051_Project\\my_project" 
+Flash Erase Done.
+Flash Image Update Complete. 
+Beginning programming...
+Flash Program Done: 557 bytes programmed.
+Checksum:0x94f
+Flash Verify Done: 557 bytes verified.
+Rebuild target 'Target 1'
+assembling STARTUP.A51...
+compiling clock.c...
+compiling exti.c...
+compiling gpio.c...
+compiling main.c...
+compiling timer.c...
+linking...
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    STATE_SW2/GPIO
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    TIMER2_INTERRUPT_INIT/TIMER
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    _DELAY_IT_MS/TIMER
+Program Size: data=33.0 xdata=0 const=0 code=561
+"my_project" - 0 Error(s), 3 Warning(s).
+Load "C:\\Users\\Admin\\Documents\\Tuan_2024\\At85\\C8051_Project\\my_project" 
+Flash Erase Done.
+Flash Image Update Complete. 
+Beginning programming...
+Flash Program Done: 561 bytes programmed.
+Checksum:0xc34
+Flash Verify Done: 561 bytes verified.

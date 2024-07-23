@@ -1,1 +1,0 @@
-"..\driver\src\drv_timer.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(..\driver\inc) DEBUG PRINT(.\Listings\drv_timer.lst) TABS (2) OBJECT(.\Objects\drv_timer.obj)

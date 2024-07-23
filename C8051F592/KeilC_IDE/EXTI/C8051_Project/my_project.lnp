@@ -1,0 +1,10 @@
+"STARTUP.obj",
+"clock.obj",
+"exti.obj",
+"gpio.obj",
+"main.obj",
+"timer.obj" 
+TO "my_project" 
+
+CLASSES (CODE (C:0x4000-C:0xFFFF), CONST (C:0x4000-C:0xFFFF), 
+ECODE (C:0x4000-C:0xFFFF), HCONST (C:0x4000-C:0xFFFF)) 

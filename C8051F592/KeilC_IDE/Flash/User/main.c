@@ -85,7 +85,7 @@ void PORT_Init (void);                 // Port initialization routine
 
 // This is the test address.  It is a 17-bit address that treats the 128K
 // or 96K of code space as a linear space.
-FLADDR start_address = 0x08000;        // Address located in Bank 3
+FLADDR start_address = 0x8000;   
 
 SEGMENT_VARIABLE (test_write_buff[8],   U8, SEG_XDATA) = "ABCDEFG";
 SEGMENT_VARIABLE (test_write_buff2[3],  U8, SEG_XDATA) = "HIJ";

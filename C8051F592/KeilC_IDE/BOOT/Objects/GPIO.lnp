@@ -1,0 +1,7 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\L51_BANK.obj" 
+TO ".\Objects\GPIO" 
+
+PRINT(".\Listings\GPIO.map") CLASSES (CODE (C:0x176-C:0x3175), CONST (C:0x176-C:0x3175), 
+ECODE (C:0x176-C:0x3175), HCONST (C:0x176-C:0x3175)) 

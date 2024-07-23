@@ -1,6 +1,5 @@
 ".\Objects\STARTUP.obj",
-".\Objects\main.obj" 
+".\Objects\uart1.obj" 
 TO ".\Objects\UART" 
 
-PRINT(".\Listings\UART.map") CLASSES (CODE (C:0x60BB-C:0x80BA), CONST (C:0x60BB-C:0x80BA), 
-ECODE (C:0x60BB-C:0x80BA), HCONST (C:0x60BB-C:0x80BA)) 
+PRINT(".\Listings\UART.map") CLASSES (ECODE (C:0x0-C:0xFFFF), HCONST (C:0x0-C:0xFFFF)) 

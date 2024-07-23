@@ -145,7 +145,7 @@
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>0</SubType>
-          <ItemText>0x0000</ItemText>
+          <ItemText>0x8000</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
@@ -245,6 +245,18 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\User\Lib\Src\F580_FlashUtils.c</PathWithFileName>
       <FilenameWithoutPath>F580_FlashUtils.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>5</FileNumber>
+      <FileType>2</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\L51_BANK.A51</PathWithFileName>
+      <FilenameWithoutPath>L51_BANK.A51</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

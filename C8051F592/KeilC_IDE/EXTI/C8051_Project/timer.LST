@@ -1,0 +1,113 @@
+C51 COMPILER V9.60.7.0   TIMER                                                             07/13/2024 13:41:26 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN timer.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE timer.c OMF2 OPTIMIZE(8,SPEED) BROWSE INTVECTOR(0X4000) DEBUG TABS(2)
+
+line level    source
+
+   1          #include "timer.h"
+   2          
+   3          
+   4          //-----------------------------------------------------------------------------
+   5          // TIMER2_Init
+   6          //-----------------------------------------------------------------------------
+   7          //
+   8          // Return Value:  None
+   9          // Parameters:    U16 counts - number of system clock cycles between interrupts
+  10          //                             range is 0 to 65535
+  11          //
+  12          // Configure Timer2 to 16-bit auto-reload and generate an interrupt at
+  13          // interval specified by <counts> using SYSCLK/12 as its time base.
+  14          // 
+  15          //  RCC: 24M/12 = 2M
+  16          // => 1s thuc hien 2M giao dong
+  17          // => 1ms ---------2M/1000 = 2000 giao dong
+  18          //-----------------------------------------------------------------------------
+  19          
+  20          void TIMER2_Init (void)
+  21          {
+  22   1         U8 SFRPAGE_save = SFRPAGE;
+  23   1         SFRPAGE = ACTIVE_PAGE;
+  24   1      
+  25   1         TMR2CN = 0x00; // Timer 2 operates in 16-bit auto-reload mode.
+  26   1                        //Timer 2 clock is the system clock divided by 12.
+  27   1      
+  28   1         CKCON &= ~0x30; //Selects the clock supplied to Timer 2, System clock divided by 12
+  29   1        
+  30   1         TMR2RL  = 0xFFFF - 2000;   // Init reload values
+  31   1        
+  32   1          TMR2  = TMR2RL;
+  33   1          TR2     = 1;
+  34   1      
+  35   1         SFRPAGE = SFRPAGE_save;
+  36   1      }
+  37          
+  38          
+  39          void Delay_ms(U32 time)
+  40          {
+  41   1        while ( time > 0)
+  42   1        {
+  43   2          if(TF2H  == 1)
+  44   2          {
+  45   3            time --;
+  46   3            TF2H = 0;
+  47   3          }
+  48   2        }
+  49   1      }
+  50          
+  51          
+  52          //----------------------------------- config timer 2 interrupt------------------------------------------
+  53          
+  54          void TIMER2_Interrupt_Init (void)
+  55          {
+C51 COMPILER V9.60.7.0   TIMER                                                             07/13/2024 13:41:26 PAGE 2   
+
+  56   1         U8 SFRPAGE_save = SFRPAGE;
+  57   1         SFRPAGE = ACTIVE_PAGE;
+  58   1      
+  59   1         TMR2CN = 0x00; // Timer 2 operates in 16-bit auto-reload mode.
+  60   1                        //Timer 2 clock is the system clock divided by 12.
+  61   1      
+  62   1         CKCON &= ~0x30; //Selects the clock supplied to Timer 2, System clock divided by 12
+  63   1        
+  64   1         TMR2RL  = 0xFFFF - 2000;   // Init reload values
+  65   1        
+  66   1         TMR2    =  TMR2RL;          // Set to reload immediately
+  67   1         ET2     = 1;                        // Enable Timer2 interrupts
+  68   1         TR2     = 1;                        // Start Timer2
+  69   1      
+  70   1         SFRPAGE = SFRPAGE_save;
+  71   1      }
+  72          
+  73          U32 time_delay = 0;
+  74          INTERRUPT (TIMER2_ISR, INTERRUPT_TIMER2)
+  75          {
+  76   1         time_delay ++;
+  77   1         TF2H = 0;                           // Reset Interrupt 
+  78   1      }
+  79          
+  80          void Delay_IT_ms(U32 time)
+  81          {
+  82   1        while(time > time_delay);
+  83   1        time_delay =0;
+  84   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    190    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

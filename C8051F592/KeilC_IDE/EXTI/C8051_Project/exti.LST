@@ -1,0 +1,58 @@
+C51 COMPILER V9.60.7.0   EXTI                                                              07/13/2024 13:41:26 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE EXTI
+OBJECT MODULE PLACED IN exti.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE exti.c OMF2 OPTIMIZE(8,SPEED) BROWSE INTVECTOR(0X4000) DEBUG TABS(2)
+
+line level    source
+
+   1          #include "exti.h"
+   2          
+   3          
+   4          // P1.2 input  Button 2  ~ EXTI1
+   5          // P1.4 input  Button 7  ~ EXTI0
+   6          
+   7          void EXTI_Init(void)
+   8          {
+   9   1         U8 SFRPAGE_save = SFRPAGE;
+  10   1         SFRPAGE = CONFIG_PAGE;              // Configured for IT01CF
+  11   1      
+  12   1        //set pin exti
+  13   1        
+  14   1         IT01CF = 0x24 ;  // P1.2 = exti1,  P1.4 = exti0
+  15   1                          //input is active low(falling) = 0x24.
+  16   1                          //input is active high(rising) = 0xac.
+  17   1        
+  18   1         // Priority
+  19   1        
+  20   1         PX1 = 1;        // exti1  priority level.
+  21   1         PX0 = 0;        // exti0  priority level.
+  22   1        
+  23   1         TCON  |= 0x05;     //External Interrupt 0, 1  edge triggered = 0x05 / level = 0x00.
+  24   1                            //
+  25   1        
+  26   1         EX0 = 1;            // Enable External Interrupt 0
+  27   1         EX1 = 1;            // Enable External Interrupt 1
+  28   1      
+  29   1         SFRPAGE = SFRPAGE_save;
+  30   1      }
+  31          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     22    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,4 @@
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky_Init.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\L51_BANK.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\STARTUP.obj"  TO "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky_Banked" RS(256) PL(68) PW(78) BANKAREA(8000H,0FFFFH) 

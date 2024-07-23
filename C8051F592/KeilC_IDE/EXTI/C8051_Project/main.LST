@@ -1,0 +1,92 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              07/13/2024 13:41:26 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c OMF2 OPTIMIZE(8,SPEED) BROWSE INTVECTOR(0X4000) DEBUG TABS(2)
+
+line level    source
+
+   1          #include <compiler_defs.h>
+   2          #include <C8051F580_defs.h>
+   3          #include <stdio.h>
+   4          #include "clock.h"
+   5          #include "gpio.h"
+   6          #include "timer.h"
+   7          #include "exti.h"
+   8          
+   9          int x0 = 0;
+  10          int x1 = 0;
+  11          int i =0;
+  12          INTERRUPT(EXTI0, INTERRUPT_INT0)
+  13          {
+  14   1        LED_YELLOW = 0x01;
+  15   1        //for(i =0; i<2; i++){ex0 ++;}
+  16   1        x0 ++;
+  17   1        x0 ++;
+  18   1      }
+  19          
+  20          INTERRUPT(EXTI1, INTERRUPT_INT1)
+  21          {
+  22   1        LED_YELLOW = 0x00; 
+  23   1        for(i =0; i<10; i++){x1 ++;}
+  24   1        x1 ++;
+  25   1      }
+  26           
+  27          
+  28          unsigned int adc_value;
+  29          float temperature;
+  30          int main(void)
+  31          {
+  32   1         SFRPAGE = ACTIVE_PAGE;
+  33   1      
+  34   1         PCA0MD &= ~0x40;                    // Disable the watchdog timer
+  35   1      
+  36   1         RCC_Init ();                 // Configure system clock
+  37   1         PORT_Init ();                       // Initialize crossbar
+  38   1         TIMER2_Init ();      // Init Timer2 to generate 
+  39   1        //TIMER2_Interrupt_Init();   // Init Timer2 to generate interrupts
+  40   1                                            
+  41   1         EXTI_Init();
+  42   1        
+  43   1         EA = 1;                             // Enable global interrupts
+  44   1         LED_GREEN = 0;
+  45   1         LED_YELLOW = 0; 
+  46   1         while (1)                        
+  47   1        {
+  48   2          LED_GREEN = 0x01;
+  49   2          Delay_ms(1000);
+  50   2          //Delay_IT_ms(100);
+  51   2          LED_GREEN = 0x00;
+  52   2          //Delay_IT_ms(100);
+  53   2          Delay_ms(1000);
+  54   2          
+  55   2      
+C51 COMPILER V9.60.7.0   MAIN                                                              07/13/2024 13:41:26 PAGE 2   
+
+  56   2        }
+  57   1      
+  58   1        return 0;
+  59   1      }
+  60          
+  61          
+  62          
+*** WARNING C294 IN LINE 58 OF main.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    124    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     12    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

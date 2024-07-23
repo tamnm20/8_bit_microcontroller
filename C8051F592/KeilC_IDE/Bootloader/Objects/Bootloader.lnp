@@ -1,0 +1,8 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\F580_FlashPrimitives.obj",
+".\Objects\F580_FlashUtils.obj" 
+TO ".\Objects\Bootloader" 
+
+PRINT(".\Listings\Bootloader.map") CLASSES (CODE (C:0xBB-C:0x10BA), CONST (C:0xBB-C:0x10BA), 
+ECODE (C:0xBB-C:0x10BA), HCONST (C:0xBB-C:0x10BA)) 

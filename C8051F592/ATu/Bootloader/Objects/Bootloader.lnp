@@ -1,6 +1,0 @@
-".\Objects\STARTUP.obj",
-".\Objects\GPIO.obj",
-".\Objects\main.obj" 
-TO ".\Objects\Bootloader" 
-PRINT(".\Listings\Bootloader.m51") RAMSIZE(256) 
-CODE( 0X0000-0X0FFF )

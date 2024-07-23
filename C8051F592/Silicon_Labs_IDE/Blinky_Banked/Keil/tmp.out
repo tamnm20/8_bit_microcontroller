@@ -1,0 +1,10 @@
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0 - SN: K1FSC-U07XFZ
+COPYRIGHT (C) 1987-2021, Arm Limited or its Affiliates. All rights reserved.
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky_Init.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\L51_BANK.obj",
+"C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\STARTUP.obj"  TO "C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky_Banked" RS(256) PL(68) PW(78) BANKAREA(8000H,0FFFFH) 
+
+Program Size: data=14.0 xdata=0 code=421
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

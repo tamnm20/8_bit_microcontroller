@@ -1,1 +1,0 @@
-"uart1.c" LARGE OMF2 OPTIMIZE (8,SPEED) BROWSE ORDER INTVECTOR(0x6000) DEBUG PRINT(.\Listings\uart1.lst) TABS (2) OBJECT(.\Objects\uart1.obj)

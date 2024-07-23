@@ -44,7 +44,11 @@
 
 #define SYSCLK      24000000           // SYSCLK frequency in Hz
 #define BAUDRATE      115200           // Baud rate of UART in bps
-
+pdata uint32_t a =9;
+pdata uint32_t q;
+data uint32_t e =9;
+const int h =100;
+int test[1000];
 //-----------------------------------------------------------------------------
 // Function PROTOTYPES
 //-----------------------------------------------------------------------------
@@ -55,22 +59,25 @@ void UART1_Init(void);
 void PORT_Init (void);
 void TIMER0_Init (void);
 void T0_Wait_ms (U8 ms);
-void UART1_SendByte(char data1);
-U8 UART1_Recv_1Byte (void);
+//void UART1_SendByte(char data1);
+//U8 UART1_Recv_1Byte (void);
 
 //-----------------------------------------------------------------------------
 // MAIN Routine
 //-----------------------------------------------------------------------------
-
 void main (void)
 {
-   U8 inputcharacter;                  // Used to store character from UART
+	int c,d;
+	uint8_t b =10;
+	int *p;
+	d = sizeof(p);
+	c = sizeof(a);
+//   U8 inputcharacter;                  // Used to store character from UART
    SFRPAGE = ACTIVE_PAGE;
 
    PCA0MD &= ~0x40;                    // Disable watchdog timer
    PORT_Init();                        // Initialize Port I/O
    //OSCILLATOR_Init();
-   
    SYSCLK_Init (); 
    TIMER0_Init ();  
    T0_Wait_ms(1);
@@ -78,35 +85,53 @@ void main (void)
 	 UART1_Init();
    SFRPAGE = ACTIVE2_PAGE;             // Switch page for UART1 communication
    //P2 =0;
+		printf ("\nAddr of a: %p",&a);
+		printf ("\nAddr of e: %p",&e);
+		printf ("\nAddr of c: %p",&c);
+		printf ("\nAddr of h: %p",&h);
+		printf ("\nSize of a: %d",c);
+		printf ("\nAddr of test: %p",test);
+		printf ("\nSize of pointer: %d\n",d);
+		for(c=0;c<50;c++){
+			test[c]=c;
+		}
+//		p=test;
+//		for(c=0;c<10;c++){
+//			printf ("%d ",test[c]);
+//		}
+//		printf ("\n%d",test[1000]);
+//		printf ("\n%d",test[4000]);
+//		printf ("\n%d",test[8000]);
+//		printf ("\n%d",test[8001]);
    while (1)
    {
 //		printf ("\nEnter character: ");
 //		inputcharacter = getkey ();
 //		printf ("\nCharacter entered : %c",inputcharacter);
 //		printf ("\n      Value in Hex: %bx",inputcharacter);
-		inputcharacter = UART1_Recv_1Byte ();
-		UART1_SendByte(inputcharacter);
+//		inputcharacter = UART1_Recv_1Byte ();
+//		UART1_SendByte(inputcharacter);
 		//UART1_SendByte('b');
    }
 }
 
 
-void UART1_SendByte(char data1) {
-	while (!TI1);			// Chờ cho đến khi TX1 Ready
-	TI1 = 0;					// Đặt TI1 về 0 để chuẩn bị cho lần gửi tiếp theo
-	SBUF1 = (U8)data1;// Ghi dữ liệu vào thanh ghi truyền (SBUF1)
-}
+//void UART1_SendByte(char data1) {
+//	while (!TI1);			// Chờ cho đến khi TX1 Ready
+//	TI1 = 0;					// Đặt TI1 về 0 để chuẩn bị cho lần gửi tiếp theo
+//	SBUF1 = (U8)data1;// Ghi dữ liệu vào thanh ghi truyền (SBUF1)
+//}
 
-U8 UART1_Recv_1Byte (void)
-{
-   U8 received;
+//U8 UART1_Recv_1Byte (void)
+//{
+//   U8 received;
 
-   while (!RI0);                       // Wait for character to be received
-   received = SBUF0;                   // Read it
-   RI0 = 0;                            // Clear received data indicator
+//   while (!RI0);                       // Wait for character to be received
+//   received = SBUF0;                   // Read it
+//   RI0 = 0;                            // Clear received data indicator
 
-   return received;
-}
+//   return received;
+//}
 
 //-----------------------------------------------------------------------------
 // Initialization Subroutines

@@ -187,11 +187,11 @@ ENDIF
 ; This code is required if you use L51_BANK.A51 with Banking Mode 4
 ;<h> Code Banking
 ; <q> Select Bank 0 for L51_BANK.A51 Mode 4
-#if 0   
+;#if 0   
 ;     <i> Initialize bank mechanism to code bank 0 when using L51_BANK.A51 with Banking Mode 4.
-EXTRN CODE (?B_SWITCH0)
-                CALL    ?B_SWITCH0      ; init bank mechanism to code bank 0
-#endif
+EXTRN CODE (?B_SWITCH1)
+                CALL    ?B_SWITCH1      ; init bank mechanism to code bank 0
+;#endif
 ;</h>
                 LJMP    ?C_START
 

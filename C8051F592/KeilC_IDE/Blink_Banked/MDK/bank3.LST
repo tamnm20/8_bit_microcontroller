@@ -1,0 +1,44 @@
+C51 COMPILER V9.60.7.0   BANK3                                                             07/18/2024 13:53:52 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE BANK3
+OBJECT MODULE PLACED IN .\Objects\bank3.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE bank3.c LARGE OMF2 OPTIMIZE(8,SPEED) ORDER INCDIR(..\User\Lib\Inc;..\MDK) D
+                    -EBUG TABS(2) OBJECT(.\Objects\bank3.obj)
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // Includes
+   3          //-----------------------------------------------------------------------------
+   4          #include <compiler_defs.h>             // Compiler declarations
+   5          #include <C8051F580.h> // SFR declarations
+   6          //-----------------------------------------------------------------------------
+   7          // Global CONSTANTS
+   8          //-----------------------------------------------------------------------------
+   9          SBIT(YELLOW, SFR_P2, 0);
+  10          //-----------------------------------------------------------------------------
+  11          // toggle_led
+  12          //-----------------------------------------------------------------------------
+  13          void toggle_led(void)
+  14          {
+  15   1       YELLOW = !YELLOW;
+  16   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      3    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

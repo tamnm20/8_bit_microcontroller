@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2024 11:17:43 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52          // Release 1.1 / 11 MAR 2010 (GP)
   53          //    -Tested with Raisonance
   54          //
-C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2024 11:17:43 PAGE 2   
 
   55          // Release 1.0 / 23 OCT 2008 (GP)
   56          //    -Initial Revision
@@ -97,7 +97,7 @@ line level    source
   85          
   86          // This is the test address.  It is a 17-bit address that treats the 128K
   87          // or 96K of code space as a linear space.
-  88          FLADDR start_address = 0x08000;        // Address located in Bank 3
+  88          FLADDR start_address = 0x8000;   
   89          
   90          SEGMENT_VARIABLE (test_write_buff[8],   U8, SEG_XDATA) = "ABCDEFG";
   91          SEGMENT_VARIABLE (test_write_buff2[3],  U8, SEG_XDATA) = "HIJ";
@@ -126,7 +126,7 @@ line level    source
  114   3               LED = 0;
  115   3               while (1);                    // Last reset was caused by a Flash
  116   3                                             // Error Device Reset
-C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 3   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2024 11:17:43 PAGE 3   
 
  117   3                                             // LED is off and loop forever to
  118   3                                             // indicate error
@@ -190,7 +190,7 @@ line level    source
  176   1         // Simulate the same changes to a data array for comparison
  177   1         test_compare_buff[0] = 0xFF;
  178   1         test_compare_buff[1] = 0xFF;
-C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 4   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2024 11:17:43 PAGE 4   
 
  179   1      
  180   1         for (i = 0; i < sizeof(test_compare_buff); i++)
@@ -254,7 +254,7 @@ line level    source
  238   1         FLASH_Update(0x0003, test_write_buff2, 3);
  239   1         //--------------------------------------------------------------------------
  240   1      
-C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 5   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2024 11:17:43 PAGE 5   
 
  241   1         //END OF TEST===============================================================
  242   1      
@@ -318,7 +318,7 @@ line level    source
  300          // The VDD Monitor is enabled following a power-on reset, but this routine
  301          // explicitly enables the VDD Monitor.
  302          //
-C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 6   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2024 11:17:43 PAGE 6   
 
  303          // Note: If the VDD Monitor is not enabled or not enabled as a reset source,
  304          // any attempt to write or erase Flash will cause a Flash Error Device Reset.
@@ -382,7 +382,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    PDATA SIZE       =   ----    ----
    DATA SIZE        =      4       1
    IDATA SIZE       =   ----    ----
-C51 COMPILER V9.60.7.0   MAIN                                                              07/01/2024 11:43:04 PAGE 7   
+C51 COMPILER V9.60.7.0   MAIN                                                              07/17/2024 11:17:43 PAGE 7   
 
    BIT SIZE         =   ----       1
    EDATA SIZE       =   ----    ----

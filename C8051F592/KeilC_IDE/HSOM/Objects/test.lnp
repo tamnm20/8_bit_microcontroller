@@ -1,0 +1,5 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj" 
+TO ".\Objects\test" 
+
+PRINT(".\Listings\test.map") CLASSES (ECODE (C:0x0-C:0xFFFF), HCONST (C:0x0-C:0xFFFF)) 

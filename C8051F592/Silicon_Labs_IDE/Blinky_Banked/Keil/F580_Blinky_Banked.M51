@@ -1,0 +1,285 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0          07/16/2024  14:58:32  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F
+>> 592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky.obj, C:\Users\TAMRD\Doc
+>> uments\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\
+>> F580_Blinky_Init.obj, C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F
+>> 592\Silicon_Labs_IDE\Blinky_Banked\Keil\L51_BANK.obj, C:\Users\TAMRD\Docume
+>> nts\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Blinky_Banked\Keil\STA
+>> RTUP.obj TO C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silico
+>> n_Labs_IDE\Blinky_Banked\Keil\F580_Blinky_Banked RS (256) PL (68) PW (78) B
+>> ANKAREA (8000H, 0FFFFH)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Bl
+>> inky_Banked\Keil\F580_Blinky.obj (F580_BLINKY)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Bl
+>> inky_Banked\Keil\F580_Blinky_Init.obj (F580_BLINKY_INIT)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Bl
+>> inky_Banked\Keil\L51_BANK.obj (?BANK?SWITCHING)
+  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\Silicon_Labs_IDE\Bl
+>> inky_Banked\Keil\STARTUP.obj (?C_STARTUP)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?ULCMP)
+
+
+LINK MAP OF MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F592\
+>> Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky_Banked (F580_BLINKY)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0004H     UNIT         ?DT?F580_BLINKY
+            DATA    000CH     0001H     UNIT         ?BANK?DATA
+            IDATA   000DH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0026H     UNIT         ?PR?_DELAYMS?F580_BLINKY
+                    0029H     0002H                  *** GAP ***
+            CODE    002BH     0003H     ABSOLUTE     
+            CODE    002EH     008FH     UNIT         ?C_C51STARTUP
+            CODE    00BDH     0020H     UNIT         ?PR?MAIN?F580_BLINKY
+            CODE    00DDH     0020H     UNIT         ?PR?TIMER2_ISR?F580_BLINK
+>> Y
+                    00FDH     0003H                  *** GAP ***
+            CODE    0100H     0044H     PAGE         ?BANK?SWITCH
+            CODE    0144H     0020H     UNIT         ?PR?_TIMER2_INIT?F580_BLI
+>> NKY_INIT
+            CODE    0164H     0017H     UNIT         ?PR?PORT_INIT?F580_BLINKY
+>> _INIT
+            CODE    017BH     0011H     UNIT         ?C?LIB_CODE
+            CODE    018CH     000CH     UNIT         ?BANK?SELECT
+            CODE    0198H     000BH     UNIT         ?PR?OSCILLATOR_INIT?F580_
+>> BLINKY_INIT
+            CODE    01A3H     0007H     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F
+>> 592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky_Banked (F580_BLINKY)
+BL51 BANKED LINKER/LOCATER V6.22.4.0        07/16/2024  14:58:32  PAGE 2
+
+
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?F580_BLINKY
+  +--> ?C_INITSEG
+
+?PR?MAIN?F580_BLINKY
+  +--> ?PR?OSCILLATOR_INIT?F580_BLINKY_INIT
+  +--> ?PR?PORT_INIT?F580_BLINKY_INIT
+  +--> ?PR?_TIMER2_INIT?F580_BLINKY_INIT
+  +--> ?PR?_DELAYMS?F580_BLINKY
+
+
+
+SYMBOL TABLE OF MODULE:  C:\Users\TAMRD\Documents\8_bit_microcontroller\C8051F
+>> 592\Silicon_Labs_IDE\Blinky_Banked\Keil\F580_Blinky_Banked (F580_BLINKY)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        F580_BLINKY
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:00DDH         PUBLIC        Timer2_ISR
+  B:00A8H.7       PUBLIC        EA
+  D:00A7H         PUBLIC        SFRPAGE
+  B:00C8H.7       PUBLIC        TF2H
+  D:00D9H         PUBLIC        PCA0MD
+  C:00BDH         PUBLIC        main
+  D:0008H         PUBLIC        num
+  B:00A0H.0       PUBLIC        LED
+  C:0003H         PUBLIC        _delayms
+  -------         PROC          MAIN
+  C:00BDH         LINE#         51
+  C:00BDH         LINE#         52
+  C:00BDH         LINE#         53
+  C:00C0H         LINE#         55
+  C:00C3H         LINE#         57
+  C:00C6H         LINE#         59
+  C:00C9H         LINE#         61
+  C:00D0H         LINE#         64
+  C:00D2H         LINE#         66
+  C:00D2H         LINE#         67
+  C:00D4H         LINE#         68
+  C:00DBH         LINE#         69
+  -------         ENDPROC       MAIN
+  -------         PROC          TIMER2_ISR
+  C:00DDH         LINE#         84
+  C:00E1H         LINE#         86
+  C:00E3H         LINE#         87
+  C:00F8H         LINE#         88
+  -------         ENDPROC       TIMER2_ISR
+  -------         PROC          _DELAYMS
+  D:0082H         SYMBOL        time
+  C:0003H         LINE#         89
+  C:0007H         LINE#         90
+  C:0007H         LINE#         92
+  C:0010H         LINE#         93
+  C:0028H         LINE#         94
+  -------         ENDPROC       _DELAYMS
+  -------         ENDMOD        F580_BLINKY
+
+  -------         MODULE        F580_BLINKY_INIT
+BL51 BANKED LINKER/LOCATER V6.22.4.0        07/16/2024  14:58:32  PAGE 3
+
+
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00A7H         PUBLIC        SFRPAGE
+  D:00A5H         PUBLIC        P1MDOUT
+  D:00A6H         PUBLIC        P2MDOUT
+  D:00C7H         PUBLIC        XBR2
+  D:00CCH         PUBLIC        TMR2
+  C:0144H         PUBLIC        _TIMER2_Init
+  D:00C8H         PUBLIC        TMR2CN
+  D:00D5H         PUBLIC        P1SKIP
+  D:00D6H         PUBLIC        P2SKIP
+  C:0164H         PUBLIC        PORT_Init
+  D:00A1H         PUBLIC        OSCICN
+  D:00CAH         PUBLIC        TMR2RL
+  B:00A8H.5       PUBLIC        ET2
+  B:00C8H.2       PUBLIC        TR2
+  D:008EH         PUBLIC        CKCON
+  C:0198H         PUBLIC        OSCILLATOR_Init
+  -------         PROC          OSCILLATOR_INIT
+  -------         DO            
+  D:0007H         SYMBOL        SFRPAGE_save
+  -------         ENDDO         
+  C:0198H         LINE#         36
+  C:0198H         LINE#         37
+  C:0198H         LINE#         38
+  C:019AH         LINE#         39
+  C:019DH         LINE#         41
+  C:01A0H         LINE#         43
+  C:01A2H         LINE#         44
+  -------         ENDPROC       OSCILLATOR_INIT
+  -------         PROC          PORT_INIT
+  -------         DO            
+  D:0007H         SYMBOL        SFRPAGE_save
+  -------         ENDDO         
+  C:0164H         LINE#         59
+  C:0164H         LINE#         60
+  C:0164H         LINE#         61
+  C:0166H         LINE#         62
+  C:0169H         LINE#         64
+  C:016CH         LINE#         65
+  C:016FH         LINE#         67
+  C:0172H         LINE#         68
+  C:0175H         LINE#         71
+  C:0178H         LINE#         73
+  C:017AH         LINE#         74
+  -------         ENDPROC       PORT_INIT
+  -------         PROC          _TIMER2_INIT
+  D:0006H         SYMBOL        counts
+  -------         DO            
+  D:0005H         SYMBOL        SFRPAGE_save
+  -------         ENDDO         
+  C:0144H         LINE#         89
+  C:0144H         LINE#         90
+  C:0144H         LINE#         91
+  C:0146H         LINE#         92
+  C:0149H         LINE#         94
+  C:014BH         LINE#         96
+  C:014EH         LINE#         98
+  C:0157H         LINE#         99
+  C:015DH         LINE#         100
+  C:015FH         LINE#         101
+  C:0161H         LINE#         103
+  C:0163H         LINE#         104
+  -------         ENDPROC       _TIMER2_INIT
+  -------         ENDMOD        F580_BLINKY_INIT
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0        07/16/2024  14:58:32  PAGE 4
+
+
+  -------         MODULE        ?BANK?SWITCHING
+  C:018CH         SEGMENT       ?BANK?SELECT
+  D:000CH         SEGMENT       ?BANK?DATA
+  C:0100H         SEGMENT       ?BANK?SWITCH
+  C:0100H         PUBLIC        ?B_BANK0
+  C:0111H         PUBLIC        ?B_BANK1
+  C:0122H         PUBLIC        ?B_BANK2
+  C:0133H         PUBLIC        ?B_BANK3
+  D:000CH         PUBLIC        ?B_CURRENTBANK
+  N:0000H         PUBLIC        ?B_FACTOR
+  N:0003H         PUBLIC        ?B_MASK
+  N:0004H         PUBLIC        ?B_MODE
+  N:0004H         PUBLIC        ?B_NBANKS
+  N:00FFH         PUBLIC        ?B_RST_BANK
+  C:010AH         PUBLIC        ?B_SWITCH0
+  C:011BH         PUBLIC        ?B_SWITCH1
+  C:012CH         PUBLIC        ?B_SWITCH2
+  C:013DH         PUBLIC        ?B_SWITCH3
+  C:018CH         PUBLIC        _SWITCHBANK
+  N:0000H         SYMBOL        ?BANK?SWITCHING
+  N:0000H         SYMBOL        ?B_FIRSTBIT
+  N:0000H         SYMBOL        ?B_RTX
+  N:0000H         SYMBOL        ?B_VAR_BANKING
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  N:0044H         SYMBOL        B_SWITCH_SIZE
+  C:0100H         SYMBOL        B_SWITCH_START
+  N:0004H         SYMBOL        CNT
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  B:00A8H.7       SYMBOL        EA
+  D:00A8H         SYMBOL        IE
+  N:0003H         SYMBOL        MASK
+  D:00F5H         SYMBOL        PSBANK
+  C:0194H         SYMBOL        SWITCH_TAB
+  C:018DH         SYMBOL        _SWITCHBANK_A
+  -------         ENDMOD        ?BANK?SWITCHING
+
+  -------         MODULE        ?C_STARTUP
+  C:002EH         SEGMENT       ?C_C51STARTUP
+  I:000DH         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0031H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0000H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:0081H         SYMBOL        SP
+  C:002EH         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         85
+  C:002EH         LINE#         92
+  C:0030H         LINE#         93
+  C:0031H         LINE#         94
+  C:0032H         LINE#         95
+  C:0034H         LINE#         144
+  C:0037H         LINE#         147
+BL51 BANKED LINKER/LOCATER V6.22.4.0        07/16/2024  14:58:32  PAGE 5
+
+
+  C:003AH         LINE#         148
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        ?C?ULCMP
+  C:017BH         PUBLIC        ?C?ULCMP
+  -------         ENDMOD        ?C?ULCMP
+
+Program Size: data=14.0 xdata=0 code=421
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

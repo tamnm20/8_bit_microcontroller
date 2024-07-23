@@ -1,0 +1,7 @@
+COMMON {".\Objects\STARTUP.obj"},
+COMMON {".\Objects\main.obj"},
+COMMON {".\Objects\L51_BANK.obj"},
+BANK3 {".\Objects\bank3.obj"} 
+TO ".\Objects\Blink" 
+BankArea (0x008000, 0x00FFFF) 
+PRINT(".\Blink.map")

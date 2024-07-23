@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 1   
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/17/2024 11:17:43 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE F580_FLASHUTILS
@@ -62,7 +62,7 @@ line level    source
   52          void FLASH_Copy   (FLADDR dest, FLADDR src, U16 numbytes);
   53          
   54          // FLASH test routines
-C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 2   
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/17/2024 11:17:43 PAGE 2   
 
   55          void FLASH_Fill (FLADDR addr, U32 length, U8 fill);
   56          
@@ -126,7 +126,7 @@ line level    source
  114   2      
  115   2            wptr = FLASH_TEMP + dest - dest_1_page_start + numbytes;
  116   2            rptr = dest + numbytes;
-C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 3   
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/17/2024 11:17:43 PAGE 3   
 
  117   2            length = dest_1_page_end - dest - numbytes + 1;
  118   2            FLASH_Copy (wptr, rptr, length);
@@ -190,7 +190,7 @@ line level    source
  176          // FLASH_Update
  177          //-----------------------------------------------------------------------------
  178          //
-C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 4   
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/17/2024 11:17:43 PAGE 4   
 
  179          // This routine replaces <numbytes> from <src> to the FLASH addressed by
  180          // <dest>.  This function calls FLASH_Clear() to handle the dirty work of
@@ -254,7 +254,7 @@ line level    source
  238          //-----------------------------------------------------------------------------
  239          void FLASH_Copy (FLADDR dest, FLADDR src, U16 numbytes)
  240          {
-C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/01/2024 10:20:14 PAGE 5   
+C51 COMPILER V9.60.7.0   F580_FLASHUTILS                                                   07/17/2024 11:17:43 PAGE 5   
 
  241   1         U32 i;
  242   1      
